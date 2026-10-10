@@ -1,0 +1,59 @@
+/* ==========================================================================
+   A안 · 여백의 산책
+   넓은 여백, 가는 세리프 제목, 띠와 기호만으로 조용히 읽히는 편집형 구성.
+   제목은 단어마다 굵기가 늘어 '밀도'에서 가장 진해집니다.
+   ========================================================================== */
+body[data-variant="a"] .intro-copy {
+  position: absolute; left: 5.5%; top: 8.5%;
+  max-width: 42%;
+}
+body[data-variant="a"] .intro-title {
+  margin-top: 1.6cqw;
+  font-family: var(--f-display);
+  font-size: max(40px, 8.4cqw);
+  line-height: .98;
+  letter-spacing: -.035em;
+  font-weight: 200;
+}
+body[data-variant="a"] .intro-title span { display: block; }
+body[data-variant="a"] .intro-title span:nth-child(2) { font-weight: 300; padding-left: .55em; }
+body[data-variant="a"] .intro-title span:nth-child(3) { font-weight: 700; padding-left: 1.1em; letter-spacing: -.05em; }
+body[data-variant="a"] .intro-sub {
+  margin-top: 2.2cqw; margin-left: 1.1em;
+  max-width: 21em;
+  font-size: max(14px, 1.08cqw); font-weight: 300; line-height: 1.6;
+  font-size: max(14px, 1.08cqw);
+}
+body[data-variant="a"] .intro-sub { margin-left: calc(max(40px, 8.4cqw) * 1.1); }
+
+body[data-variant="a"] .intro-clock {
+  position: absolute; right: 5.5%; bottom: 10%;
+  display: grid; justify-items: end; gap: 2px;
+}
+.clock-label { font-family: var(--f-data); font-size: max(11px, .76cqw); color: var(--mute); letter-spacing: .06em; }
+.clock-time { font-family: var(--f-display); font-weight: 200; font-size: max(32px, 4.6cqw); line-height: 1; font-variant-numeric: tabular-nums; }
+.clock-place { font-size: max(12px, .9cqw); }
+
+/* 사건 B — A안 */
+body[data-variant="a"] .evb-head {
+  display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 40px; align-items: end;
+  padding-bottom: 36px; border-bottom: 1px solid var(--rule);
+}
+body[data-variant="a"] .evb-title {
+  margin-top: 18px;
+  font-family: var(--f-display); font-weight: 300;
+  font-size: clamp(34px, 4.6cqw, 64px); line-height: 1.1; letter-spacing: -.02em;
+}
+body[data-variant="a"] .evb-nums { justify-content: flex-end; }
+body[data-variant="a"] .num-v { font-family: var(--f-display); font-weight: 200; font-size: clamp(56px, 8cqw, 112px); color: var(--mute); }
+body[data-variant="a"] .num-real .num-v { color: var(--ink); font-weight: 300; }
+body[data-variant="a"] .num-plus .num-v { font-size: clamp(28px, 3.2cqw, 44px); font-weight: 500; color: var(--ink); }
+
+@media (max-width: 860px) {
+  body[data-variant="a"] .evb-head { grid-template-columns: 1fr; }
+  body[data-variant="a"] .evb-nums { justify-content: flex-start; }
+}
+@media (max-width: 720px) {
+  body[data-variant="a"] .intro-sub { margin-left: 0; }
+}

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>길어진 시간의 밀도</title>
+<meta name="description" content="제주 여행 속 두 번의 걷기에서 나타난 발견, 상호작용과 감정의 변화">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@200;300;400;600;800&family=Hahmlet:wght@200;300;500;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/variant-a.css">
+<link rel="stylesheet" href="css/variant-b.css">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+
+
+<main id="stage"></main>
+
+<!-- 검토 도구: 시안 비교용 (최종 사이트에는 포함되지 않음) -->
+<nav class="review-bar" aria-label="시안 검토 도구">
+  <span class="rb-label">검토 도구</span>
+  <div class="rb-group" role="group" aria-label="시안">
+    <button type="button" id="rb-a" data-set="variant:a">A안<span class="long"> 여백의 산책</span></button>
+    <button type="button" id="rb-b" data-set="variant:b">B안<span class="long"> 밀도의 지형</span></button>
+  </div>
+  <div class="rb-group" role="group" aria-label="화면">
+    <button type="button" id="rb-intro" data-set="screen:intro">1 Intro</button>
+    <button type="button" id="rb-event" data-set="screen:event">2 사건 B</button>
+  </div>
+</nav>
+
+<script src="js/data.js"></script>
+<script src="js/common.js"></script>
+<script src="js/intro.js"></script>
+<script src="js/eventB.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
