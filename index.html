@@ -7,120 +7,64 @@
 <meta name="description" content="제주 여행 속 두 번의 걷기에서 나타난 발견, 상호작용과 감정의 변화">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@200;300;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..700&family=Space+Grotesk:wght@500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<!-- 홈 (확정) — 입체적인 길 위를 스크롤로 걷는 홈. 예전 홈은 _backup/index.old-home.html -->
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/home-v2.css">
+<link rel="stylesheet" href="css/main-fix.css">
 <style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
 
-
+<!-- 다른 페이지와 같은 내비게이션 (홈 · 개요 · 비교 · 인사이트) -->
 <header class="site-header">
-  <a class="brand" href="#home">길어진 시간의 밀도</a>
-  <nav class="site-nav" aria-label="섹션">
-    <a href="#overview">개요</a>
-    <a href="#event-a" class="is-a">사건 A</a>
-    <a href="#event-b" class="is-b">사건 B</a>
-    <a href="#comparison">비교</a>
-    <a href="#connection">연결</a>
-    <a href="#insight">인사이트</a>
+  <a class="brand" href="index.html">길어진 시간의 밀도</a>
+  <nav class="site-nav" aria-label="페이지">
+    <a href="index.html" aria-current="page">홈</a>
+    <a href="overview.html">개요</a>
+    <a href="comparison.html">비교</a>
+    <span class="is-soon" aria-disabled="true" title="준비 중">인사이트</span>
   </nav>
   <span class="site-meta">제주 · 7월 2일 · 두 번의 걷기</span>
 </header>
 
 <main>
-  <!-- ================= 홈 ================= -->
-  <section id="home" class="home" aria-label="홈">
-    <div class="home-stage" id="home-stage" data-phase="start">
-      <div class="home-board" id="home-board">
-        <svg id="home-svg" class="home-svg" viewBox="0 0 1440 900" width="1440" height="900" aria-hidden="true"></svg>
+  <!-- ================= 홈 · Scroll to Walk ================= -->
+  <section id="hv" class="hv" aria-label="홈">
+    <div class="hv-stage" id="hv-stage" data-phase="start">
+      <!-- 길·풍경·사진: 전환 때 이 층 전체가 길 끝을 향해 다가갑니다 -->
+      <div class="hv-world" id="hv-world">
+        <svg class="hv-svg" id="hv-svg" aria-hidden="true"></svg>
+        <div class="hv-layer" id="hv-layer"></div>
+      </div>
 
-        <h1 class="home-title">길어진 시간의 <b>밀도</b></h1>
+      <h1 class="hv-title" id="hv-title">걷는 동안 우리는 <b>무엇을 마주했을까?</b></h1>
+      <p class="hv-sub">제주 여행 속 두 번의 걷기에서 나타난<br>발견, 상호작용과 감정의 변화</p>
 
-        <!-- 1 · 첫 화면 -->
-        <div class="home-intro only-start">
-          <p class="home-sub">제주 여행 속 두 번의 걷기에서 나타난 발견, 상호작용과 감정의 변화</p>
-          <div class="home-legend">
-            <span><i class="line line-a"></i>A · 낮의 걷기 — 계획이 바뀌어 약 60분</span>
-            <span><i class="line line-b"></i>B · 저녁의 걷기 — 계획 8분, 실제 약 20분</span>
-          </div>
-        </div>
-        <p class="cursor-hint" id="cursor-hint">세 사람 근처에서 커서를 움직이면<br>그쪽으로 따라 걷습니다</p>
-        <p class="scroll-hint only-start"><span class="mouse" aria-hidden="true"></span>스크롤하면 장면이 쌓입니다</p>
+      <p class="hv-hint" aria-hidden="true"><span class="mouse"></span>스크롤하면 세 사람이 걷기 시작합니다</p>
 
-        <!-- 2 · 걷는 중 -->
-        <div class="home-count only-walk" aria-live="polite">
-          <div class="count-total">
-            <span class="count-label">쌓인 장면</span>
-            <span class="count-num" id="count-total">2</span>
-          </div>
-          <div class="count-split">
-            <span><i class="line line-a"></i>A · 낮 <b id="count-a">1</b>장</span>
-            <span><i class="line line-b"></i>B · 저녁 <b id="count-b">1</b>장</span>
-          </div>
-        </div>
+      <div class="hv-legend" id="hv-legend">
+        <span><i class="line line-a"></i>A · 낮의 걷기 — 길 위쪽</span>
+        <span><i class="line line-b"></i>B · 저녁의 걷기 — 길 아래쪽</span>
+      </div>
 
-        <!-- 3 · 갈림길 -->
-        <p class="fork-ask only-fork">어느 쪽으로 걸을까요</p>
-        <div class="gate gate-a only-fork">
-          <a class="gate-stack" data-gate="A" href="#event-a" aria-label="사건 A 사진 · 사건 A 탐색하기"></a>
-          <div class="gate-text">
-            <span class="gate-eyebrow">사건 A · 낮의 걷기</span>
-            <h2>예상 밖의<br>반전형</h2>
-            <p>카페가 닫혀 시작된 약 60분. 새로운 장소와 풍경을 만나며 감정이 바뀐 걷기.</p>
-            <a class="gate-link" href="#event-a">사건 A 탐색하기 →</a>
-          </div>
-        </div>
-        <div class="gate gate-b only-fork">
-          <a class="gate-stack" data-gate="B" href="#event-b" aria-label="사건 B 사진 · 사건 B 탐색하기"></a>
-          <div class="gate-text">
-            <span class="gate-eyebrow">사건 B · 저녁의 걷기</span>
-            <h2>과정<br>몰입형</h2>
-            <p>계획 8분이 약 20분이 된 걷기. 돌담길과 사진, 대화 속에서 이동 자체에 머문 시간.</p>
-            <a class="gate-link" href="#event-b">사건 B 탐색하기 →</a>
-          </div>
-        </div>
-        <div class="fork-caption only-fork">
-          <p>엮여 있던 장면이 다시 두 갈래로 나뉩니다.<br>두 걷기는 같은 날의 다른 시간입니다.</p>
-          <a class="fork-link" href="#overview">개요부터 차례로 보기 ↓</a>
-        </div>
+      <div class="hv-count" aria-live="polite">
+        <span class="hv-count-label">지나온 장면</span>
+        <span class="hv-count-num" id="hv-count">0</span>
+      </div>
+
+      <!-- 마지막 장면에서만 나타남 -->
+      <div class="hv-end" id="hv-end" inert>
+        <a class="hv-cta" id="hv-cta" href="overview.html">두 번의 걷기 펼쳐보기 <span aria-hidden="true">→</span></a>
       </div>
     </div>
   </section>
-
-  <!-- ================= 이후 섹션 (다음 단계에서 제작) ================= -->
-  <section id="overview" class="stub" aria-labelledby="t-overview">
-    <span class="stub-tag">다음 단계에서 제작합니다</span>
-    <h2 id="t-overview">개요</h2>
-    <p>두 걷기가 길어진 이유, 공통점과 차이를 소개하는 섹션입니다.</p>
-  </section>
-  <section id="event-a" class="stub stub-a" aria-labelledby="t-a">
-    <span class="stub-tag">다음 단계에서 제작합니다</span>
-    <h2 id="t-a">사건 A · 예상 밖의 반전형</h2>
-    <p>장소별 발견, 상호작용, 감정 변화를 유기적인 곡선 위에서 탐색하는 섹션입니다.</p>
-  </section>
-  <section id="event-b" class="stub stub-b" aria-labelledby="t-b">
-    <span class="stub-tag">다음 단계에서 제작합니다</span>
-    <h2 id="t-b">사건 B · 과정 몰입형</h2>
-    <p>계획 8분과 실제 약 20분 사이의 경험을 시간 확장형 타임라인으로 탐색하는 섹션입니다.</p>
-  </section>
-  <section id="comparison" class="stub" aria-labelledby="t-comp">
-    <span class="stub-tag">다음 단계에서 제작합니다</span>
-    <h2 id="t-comp">비교</h2>
-    <p>상호작용 총량과 10분당 밀도, 목적지 중심과 경험 중심의 관점 전환.</p>
-  </section>
-  <section id="connection" class="stub" aria-labelledby="t-conn">
-    <span class="stub-tag">다음 단계에서 제작합니다</span>
-    <h2 id="t-conn">연결</h2>
-    <p>상호작용 유형과 감정, 관계에 대한 회고.</p>
-  </section>
-  <section id="insight" class="stub" aria-labelledby="t-ins">
-    <span class="stub-tag">다음 단계에서 제작합니다</span>
-    <h2 id="t-ins">인사이트</h2>
-    <p>두 걷기에서 관찰된 패턴과 최종 메시지.</p>
-  </section>
 </main>
 
+<!-- 전환의 마지막: 길 표면이 화면을 채운 뒤 평면(개요)으로 넘어가는 막 -->
+<div class="hv-cover" id="hv-cover" aria-hidden="true"></div>
+
 <script src="js/data.js"></script>
-<script src="js/home.js"></script>
+<script src="js/home-main.js"></script>
 </body>
 </html>

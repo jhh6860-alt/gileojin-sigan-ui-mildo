@@ -1,0 +1,159 @@
+/* ==========================================================================
+   비교 (Comparison) · Different ways of spending time
+   style.css 의 토큰을 그대로 씁니다. 이 파일은 비교 페이지에서만 불러옵니다.
+   ========================================================================== */
+.cp {
+  /* 감정 4색 — 감정 장면에서만, 사건 색과 다른 네모 표식으로 */
+  --emo-1: #7B6BB2; --emo-2: #7FA978; --emo-3: #DDB23A; --emo-4: #E58597;
+  --gut: clamp(20px, 4vw, 64px);
+  position: relative; height: 560vh;
+}
+.cp-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; background: var(--ground); }
+.site-nav a[aria-current="page"] { background: var(--surface-sunken); }
+
+.cp-kicker {
+  position: absolute; left: 0; right: 0; top: clamp(76px, 10vh, 92px); z-index: 2; margin: 0;
+  text-align: center; font-family: var(--f-data); font-size: 11px; letter-spacing: .04em; color: var(--mute);
+}
+.cp-kicker span { color: var(--ink); margin-right: 10px; }
+
+/* 한 장면 = 왼쪽 A / 가운데 질문 / 오른쪽 B */
+.cp-scene {
+  position: absolute; inset: 0; box-sizing: border-box;
+  padding: clamp(118px, 15vh, 140px) var(--gut) clamp(84px, 11vh, 100px);
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr) minmax(0, 1fr);
+  column-gap: clamp(24px, 3.4vw, 56px); align-items: center;
+  opacity: 0; visibility: hidden;
+}
+.cp-scene.is-live { visibility: visible; }
+.cp-scene.is-back { pointer-events: none; }
+
+.cp-side { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.cp-ev { margin: 0; display: inline-flex; align-items: center; gap: 8px; font-family: var(--f-data); font-size: 11px; letter-spacing: .04em; }
+.cp-ev i { width: 22px; height: 2px; border-radius: 1px; background: var(--a); }
+.cp-b .cp-ev i { background: var(--b); }
+.cp-key { margin: 0; font-family: var(--f-display); font-weight: 600; font-size: clamp(22px, 2.1vw, 30px); letter-spacing: -.03em; line-height: 1.15; }
+.cp-copy { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--mute); max-width: 30em; }
+.cp-flow { margin: 0; font-family: var(--f-data); font-size: 11px; letter-spacing: .02em; color: var(--ink); }
+.cp-flow span { color: var(--mute); margin: 0 4px; }
+.cp-note { margin: 0; padding-top: 10px; border-top: 1px solid var(--rule); font-size: 12px; line-height: 1.5; color: var(--mute); }
+
+.cp-graphic { position: relative; margin: 6px 0 2px; }
+.cp-graphic svg { display: block; width: 100%; height: auto; max-height: 30vh; overflow: visible; }
+/* 낮은 화면에서는 설명 글을 줄여 그래픽과 제목이 잘리지 않게 */
+@media (max-height: 760px) and (min-width: 861px) {
+  .cp-copy { font-size: 13.5px; }
+  .cp-note { display: none; }
+  .cp-sub { font-size: 14px; }
+}
+
+/* 가운데: 비교 질문 */
+.cp-center { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 18px; will-change: transform; }
+.cp-eyebrow { margin: 0; font-family: var(--f-data); font-size: 12px; letter-spacing: .08em; color: var(--ink); }
+.cp-q {
+  margin: 0; font-family: var(--f-display); font-weight: 400;
+  font-size: clamp(38px, 5vw, 84px); line-height: 1.02; letter-spacing: -.045em;
+}
+.cp-q b { font-weight: 700; }
+.cp-sub { margin: 0; max-width: 24em; font-size: 15px; line-height: 1.6; color: var(--mute); }
+
+/* 그래픽 공통 조형 (선·점·작은 글자) */
+.cp-t { font-family: var(--f-data); font-size: 11.5px; letter-spacing: .02em; fill: var(--ink); }
+.cp-t-m { font-family: var(--f-data); font-size: 11px; letter-spacing: .02em; fill: var(--mute); }
+.cp-t-k { font-family: var(--f-body); font-size: 13.5px; font-weight: 500; fill: var(--ink); }
+.cp-t-q { font-family: var(--f-body); font-size: 13px; font-weight: 500; fill: var(--ink); }
+.cp-line { fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.cp-line-a { stroke: var(--a); }
+.cp-line-b { stroke: var(--b); }
+.cp-plan { fill: none; stroke: var(--mute); stroke-width: 1.2; stroke-dasharray: 2 6; stroke-linecap: round; }
+.cp-ghost { fill: none; stroke: var(--mute); stroke-width: 1.2; stroke-dasharray: 3 4; }
+.cp-dot-a { fill: var(--a); }
+.cp-dot-b { fill: var(--b); }
+.cp-ring-a { fill: var(--ground); stroke: var(--a); stroke-width: 2; }
+.cp-ring-b { fill: var(--ground); stroke: var(--b); stroke-width: 2; }
+.cp-block { fill: var(--ink); }
+.cp-pill-b { fill: var(--ground); stroke: var(--b); stroke-width: 1.2; }
+.cp-tick { stroke: var(--b); stroke-width: 1; opacity: .6; }
+.cp-area-a { fill: var(--a); fill-opacity: .1; }
+.cp-band { stroke-width: 1.2; }
+.cp-band-shared { fill: rgba(46, 108, 255, .14); stroke: var(--b); }
+.cp-band-personal { fill: rgba(98, 98, 106, .08); stroke: var(--mute); stroke-dasharray: 3 3; }
+.cp-base { stroke: var(--rule); stroke-width: 1; }
+.cp-zero { stroke: var(--mute); stroke-width: 1; stroke-dasharray: 2 4; }
+.cp-emo { stroke: var(--ground); stroke-width: 1.5; }
+.cp-co { stroke: var(--b); stroke-width: 1; stroke-dasharray: 1.5 3; opacity: .7; }
+.cp-bracket { fill: none; stroke: var(--ink); stroke-width: 1; }
+.cp-bar-plan { stroke: var(--b); stroke-width: 6; stroke-linecap: round; opacity: .35; }
+.cp-bar-real { stroke: var(--b); stroke-width: 6; stroke-linecap: round; }
+
+/* 눌러 보는 요소 */
+.cp-hit { cursor: pointer; outline: none; }
+.cp-hit:focus-visible .cp-hit-ring { stroke: var(--ink); stroke-width: 2; opacity: 1; }
+.cp-hit-ring { fill: none; stroke: transparent; }
+.cp-hit:hover .cp-hit-ring, .cp-hit.is-on .cp-hit-ring { stroke: var(--ink); opacity: .5; }
+.cp-hit.is-on .cp-hit-ring { opacity: 1; }
+.cp-tip {
+  position: absolute; left: 0; right: 0; bottom: calc(100% + 6px); z-index: 3;
+  padding: 10px 12px; border-radius: 12px; background: var(--ink); color: var(--ground);
+  font-size: 12.5px; line-height: 1.5; pointer-events: none;
+  opacity: 0; transform: translateY(4px); transition: opacity .25s var(--ease), transform .25s var(--ease);
+}
+.cp-tip.is-on { opacity: 1; transform: none; }
+.cp-tip b { display: block; margin-bottom: 2px; font-family: var(--f-data); font-size: 10.5px; font-weight: 500; letter-spacing: .02em; color: #B9B9BF; }
+
+/* 감정 종류 범례 */
+.cp-emo-key { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 14px; font-size: 12px; color: var(--mute); }
+.cp-emo-key li { display: inline-flex; align-items: center; gap: 6px; }
+.cp-emo-key i { width: 9px; height: 9px; border-radius: 2px; background: var(--emo); transform: rotate(45deg); }
+
+/* 종합 장면 */
+.cp-rows { list-style: none; margin: 6px 0 4px; padding: 0; display: flex; flex-direction: column; }
+.cp-rows li { display: grid; grid-template-columns: 64px 1fr; align-items: center; gap: 4px 14px; padding: 10px 0; border-top: 1px solid var(--rule); }
+.cp-rows li:last-child { border-bottom: 1px solid var(--rule); }
+.cp-rows svg { grid-row: 1 / span 2; width: 64px; height: 30px; overflow: visible; }
+.cp-rows .k { font-family: var(--f-data); font-size: 10.5px; letter-spacing: .04em; color: var(--mute); }
+.cp-rows .v { font-family: var(--f-display); font-size: 17px; font-weight: 600; letter-spacing: -.02em; line-height: 1.25; }
+.cp-sum { margin: 8px 0 0; font-family: var(--f-display); font-weight: 500; font-size: clamp(19px, 1.7vw, 24px); letter-spacing: -.02em; line-height: 1.25; }
+.cp-swap { display: grid; }
+.cp-swap > * { grid-area: 1 / 1; }
+.cp-common { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.cp-common li { padding: 5px 12px; border: 1px solid var(--rule); border-radius: var(--r-pill); font-family: var(--f-data); font-size: 11px; letter-spacing: .02em; }
+
+/* 진행 표시 */
+.cp-progress {
+  position: absolute; left: 50%; bottom: 26px; z-index: 4; transform: translateX(-50%);
+  display: flex; gap: 4px;
+}
+.cp-progress button {
+  position: relative; display: inline-flex; align-items: baseline; gap: 6px;
+  padding: 10px 10px 6px; border: 0; background: none; cursor: pointer;
+  font-family: var(--f-data); font-size: 10.5px; letter-spacing: .06em; color: var(--mute);
+  transition: color .3s var(--ease);
+}
+.cp-progress button b { font-weight: 500; }
+.cp-progress button::before { content: ""; position: absolute; left: 10px; right: 10px; top: 0; height: 2px; background: var(--rule); }
+.cp-progress button::after { content: ""; position: absolute; left: 10px; top: 0; height: 2px; width: var(--fill, 0%); max-width: calc(100% - 20px); background: var(--ink); }
+.cp-progress button[aria-current="step"] { color: var(--ink); }
+.cp-progress button:hover { color: var(--ink); }
+.cp-progress button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 4px; }
+
+/* ---------- 모바일: 세 칼럼을 줄이지 않고 질문 → A → B 로 쌓아 읽기 ---------- */
+@media (max-width: 860px) {
+  .cp { height: auto; }
+  .cp-stage { position: static; height: auto; overflow: visible; padding-top: 104px; }
+  .cp-kicker { position: static; padding: 0 var(--gut) 8px; }
+  .cp-scene {
+    position: static; opacity: 1 !important; visibility: visible;
+    display: flex; flex-direction: column; gap: 28px;
+    padding: 56px var(--gut) 72px; border-top: 1px solid var(--rule);
+  }
+  .cp-center { order: -1; transform: none !important; }
+  .cp-swap { display: flex; flex-direction: column; gap: 18px; }
+  .cp-swap-a { font-size: clamp(28px, 7vw, 40px); }
+  .cp-progress { display: none; }
+  .cp-tip { position: static; margin-top: 8px; }
+  .cp-tip:not(.is-on) { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cp-center { transform: none !important; }
+}

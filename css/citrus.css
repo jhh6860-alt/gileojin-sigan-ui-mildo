@@ -1,0 +1,125 @@
+/* ==========================================================================
+   Citrus Graphic Edition — 실험용 스타일 시안 (기존 css 위에 덧씌움)
+   · citrus*.html 에서만 불러옵니다. 이 파일과 js/citrus.js, citrus*.html 을 지우면 시안만 사라집니다.
+   · 정보 구조·텍스트·인터랙션은 그대로, 색·배경 그래픽·경로 표현·미세 모션만 바꿉니다.
+   ========================================================================== */
+:root {
+  /* 바탕·글자 */
+  --ground: #FFFBF4;            /* 아주 옅은 크림 */
+  --surface-sunken: #F7EEE1;
+  --surface-glass: rgba(255, 251, 244, 0.86);
+  --ink: #17161A;
+  --mute: #6A645E;
+  --body2: #6A645E;
+  --rule: rgba(23, 22, 26, 0.12);
+  --mat: #FFFDF9;
+  --walker-shadow: #EADCC8;
+
+  /* 두 사건 — 더 또렷하게 */
+  --a: #FF7A1A;                 /* 시트러스 오렌지 */
+  --b: #2F5BFF;                 /* 선명한 블루 */
+  --a-text: #D95A00;            /* 작은 글자용 진한 오렌지 */
+  --b-text: #2140D6;
+
+  /* 오렌지 그래픽 보조 톤 */
+  --c-yellow: #FFB43C;          /* 옐로우 오렌지 */
+  --c-apricot: #FF9E6B;         /* 살구 */
+  --c-red: #FF5A36;             /* 레드 오렌지 */
+  --c-leaf: #6F8A3A;            /* 올리브 잎 */
+  --c-leaf-2: #9AAE5C;
+  /* 껍질 리본: 겉(진한 색) / 속(옅은 속껍질) */
+  --peel-a: #FF7A1A;  --pith-a: #FFD2A1;
+  --peel-b: #2F5BFF;  --pith-b: #B9C8FF;
+}
+
+body { background: var(--ground); }
+main { position: relative; z-index: 1; }
+.site-header { background: linear-gradient(var(--ground) 55%, rgba(255, 251, 244, 0)); }
+
+/* ---------- 원본과 비교하는 스위치 (상단 오른쪽) ---------- */
+.citrus-switch {
+  justify-self: end; pointer-events: auto;
+  display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 12px 0 10px;
+  border: 1px solid var(--rule); border-radius: var(--r-pill); background: var(--surface-glass);
+  font-family: var(--f-data); font-size: 11px; letter-spacing: .02em; color: var(--ink); white-space: nowrap;
+  transition: background-color .3s var(--ease), border-color .3s var(--ease);
+}
+.citrus-switch i { width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle at 40% 40%, var(--c-yellow), var(--a) 70%); }
+.citrus-switch:hover { background: var(--surface-sunken); border-color: var(--mute); }
+
+/* ---------- 배경: 흐릿한 오렌지 블롭 + 평면 잎 (아주 옅게, 글을 가리지 않음) ---------- */
+.citrus-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.cb {
+  position: absolute; border-radius: 50%;
+  filter: blur(26px); opacity: .42; will-change: transform;
+  animation: citrusDrift 22s ease-in-out infinite alternate;
+}
+.cb-1 { width: 46vmax; height: 46vmax; right: -14vmax; top: -16vmax;
+  background: radial-gradient(circle at 42% 44%, var(--a) 0%, var(--c-yellow) 34%, rgba(255, 180, 60, 0) 68%); }
+.cb-2 { width: 30vmax; height: 26vmax; left: -10vmax; bottom: -10vmax; opacity: .34; animation-duration: 28s;
+  background: radial-gradient(circle at 55% 45%, var(--c-red) 0%, var(--c-apricot) 36%, rgba(255, 158, 107, 0) 70%); }
+.cb-3 { width: 14vmax; height: 14vmax; left: 22vw; top: 54vh; opacity: .26; animation-duration: 18s;
+  background: radial-gradient(circle, var(--c-yellow) 0%, rgba(255, 180, 60, 0) 68%); }
+.cb-4 { width: 9vmax; height: 9vmax; right: 18vw; bottom: 10vh; opacity: .22; animation-duration: 24s;
+  background: radial-gradient(circle, var(--c-apricot) 0%, rgba(255, 158, 107, 0) 70%); }
+.citrus-leaves { position: absolute; right: 1.5vmax; top: 4.5vmax; width: 13vmax; height: auto; opacity: .38; transform: rotate(-18deg); }
+.citrus-leaves .lf { fill: var(--c-leaf); }
+.citrus-leaves .lf2 { fill: var(--c-leaf-2); }
+.citrus-leaves .vein { fill: none; stroke: rgba(255, 251, 244, .5); stroke-width: 1.2; }
+@keyframes citrusDrift {
+  0%   { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-2vmax, 1.6vmax) scale(1.05); }
+}
+
+/* ---------- 껍질 리본 (js/citrus.js 가 기존 경로선을 따라 그림) ---------- */
+.peel-a { fill: var(--peel-a); }
+.pith-a { fill: var(--pith-a); }
+.peel-b { fill: var(--peel-b); }
+.pith-b { fill: var(--pith-b); }
+.peel-shadow { fill: rgba(120, 60, 0, .09); }
+/* 원래 선은 리본의 가운데 솔기처럼 아주 가늘게 (그리기 진행·기준 강조는 원래 코드가 그대로 담당) */
+.citrus-seam { stroke-width: 1 !important; opacity: .55; }
+
+/* ---------- 홈 ---------- */
+.hv-stage { background: transparent; }
+.hv-road, .hv-slab, .hv-ahead { display: none; }           /* 회색 도로 대신 껍질 리본 */
+.hv-lane { opacity: 0; }                                   /* 두 차선은 리본이 대신 그림 (위치 계산용으로만 남김) */
+.hv-ahead-line { stroke: var(--c-apricot); stroke-width: 2; stroke-dasharray: 1 9; opacity: .9; }
+.hv-post { stroke: rgba(23, 22, 26, .22); }
+.hv-foot { fill: var(--a); }
+/* 길가 풍경 → 평면 잎과 작은 블롭 */
+.d-grass { stroke: var(--c-leaf-2); }
+.d-shrub { fill: var(--c-apricot); opacity: .55; filter: blur(1.5px); }
+.d-leaf { fill: var(--c-leaf); }
+.d-leaf-hi { fill: var(--c-leaf-2); }
+.d-trunk { stroke: var(--c-leaf); }
+.d-shadow { fill: rgba(120, 60, 0, .06); }
+.d-wall-l, .d-wall-r, .d-roof, .d-roof-edge { display: none; }   /* 집 대신 */
+.d-stone { fill: var(--c-yellow); opacity: .7; }
+/* 사진이 나타날 때 잠깐 번지는 오렌지 빛 */
+.hv-ph { isolation: isolate; }
+.hv-ph::before {
+  content: ""; position: absolute; left: -18%; right: -18%; top: -14%; bottom: -14%; z-index: -1;
+  border-radius: 50%; background: radial-gradient(circle, rgba(255, 140, 40, .55), rgba(255, 180, 60, 0) 68%);
+  filter: blur(14px); opacity: 0; pointer-events: none;
+}
+.hv-ph.is-on::before { animation: citrusBloom 1.6s var(--ease) both; }
+@keyframes citrusBloom { 0% { opacity: 0; transform: scale(.7); } 35% { opacity: 1; } 100% { opacity: 0; transform: scale(1.15); } }
+.hv-ph-frame { border-radius: 14px; }
+.hv-mark { background: var(--ground); }
+
+/* ---------- 개요 ---------- */
+.ov-label { background: rgba(255, 251, 244, .9); }
+.ov-leader { stroke-dasharray: 1 4; }
+.ov-dot { box-shadow: 0 0 0 3px var(--ground); }
+
+/* ---------- 비교 ---------- */
+.cp-stage { background: transparent; }
+.cp-bar-plan { stroke: var(--pith-b); opacity: 1; }
+.cp-area-a { fill: var(--c-yellow); fill-opacity: .22; }
+.cp-band-shared { fill: rgba(47, 91, 255, .12); }
+
+@media (prefers-reduced-motion: reduce) {
+  .cb { animation: none; }
+  .hv-ph.is-on::before { animation: none; }
+}

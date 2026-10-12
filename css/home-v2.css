@@ -1,0 +1,177 @@
+/* ==========================================================================
+   홈 V2 시안 · Scroll to Walk
+   기존 style.css 의 토큰을 씁니다. 이 파일을 지우면 시안만 사라집니다.
+   ========================================================================== */
+.hv { position: relative; height: 640vh; }
+.hv-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; background: var(--ground); }
+.hv-world { position: absolute; inset: 0; will-change: transform; }
+.hv-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: visible; }
+.hv-layer { position: absolute; inset: 0; pointer-events: none; }
+
+.hv-header { grid-template-columns: 1fr auto; }
+.hv-draft { pointer-events: auto; border-bottom: 1px solid transparent; }
+.hv-draft:hover { color: var(--ink); border-bottom-color: currentColor; }
+
+/* 길 */
+.hv-slab { fill: #DCDCD8; }
+.hv-road { fill: #EFEFEC; stroke: rgba(18, 18, 20, .14); stroke-width: 1; stroke-linejoin: round; }
+.hv-ahead { fill: #EFEFEC; opacity: .45; }
+.hv-ahead-line { fill: none; stroke: var(--mute); stroke-width: 1.2; stroke-dasharray: 2 7; stroke-linecap: round; opacity: .7; }
+.hv-lane { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.hv-lane-a { stroke: var(--a); }
+.hv-lane-b { stroke: var(--b); }
+.hv-post { stroke: rgba(18, 18, 20, .28); stroke-width: 1; }
+.hv-foot { fill: var(--ink); }
+
+/* 길 주변 풍경 (지나온 곳부터 나타남) */
+.hv-deco { opacity: 0; transition: opacity .8s var(--ease); }
+.hv-deco.is-on { opacity: 1; }
+.d-grass { fill: none; stroke: #8FAE7A; stroke-width: 1.3; stroke-linecap: round; }
+.d-shrub { fill: #B7CBA4; }
+.d-shadow { fill: rgba(18, 18, 20, .07); }
+.d-trunk { stroke: #9C9183; stroke-width: 2; stroke-linecap: round; }
+.d-leaf { fill: #A8C193; }
+.d-leaf-hi { fill: #BED2AB; }
+.d-wall-l { fill: #E4E1DA; }
+.d-wall-r { fill: #D3CFC6; }
+.d-roof { fill: #BFB8AA; }
+.d-roof-edge { fill: none; stroke: rgba(18, 18, 20, .18); stroke-width: .8; }
+.d-stone { fill: #8E8E89; }
+
+/* 전환의 목적지 표시 */
+.hv-dest { opacity: 0; }
+.hv-dest-ring { fill: none; stroke: var(--ink); stroke-width: 1.4; }
+.hv-dest-dot { fill: var(--ink); }
+
+/* 실루엣 (기존 홈과 같은 모양) */
+.walker-body { fill: var(--ink); stroke: var(--ink); }
+.walker-shadow { fill: var(--walker-shadow); stroke: var(--walker-shadow); }
+.walker line { stroke-width: 2.8; stroke-linecap: round; }
+
+/* 사진: 지나간 지점에서만 나타남. A 는 길 위쪽, B 는 길 아래쪽 */
+.hv-ph {
+  position: absolute; left: 0; top: 0; margin: 0;
+  display: flex; flex-direction: column; gap: 5px;
+  opacity: 0; visibility: hidden;
+  transition: opacity .6s var(--ease), visibility 0s linear .6s;
+  will-change: transform;
+}
+.hv-ph.is-on { opacity: 1; visibility: visible; transition: opacity .6s var(--ease), visibility 0s; }
+.hv-ph.is-old { opacity: .8; }
+.hv-ph-frame {
+  display: block; aspect-ratio: 4 / 3; box-sizing: border-box; padding: 4px;
+  background: var(--mat); border: 1px solid var(--rule); border-radius: 12px;
+  transform: translateY(12px) scale(.86); transform-origin: 50% 100%;
+  transition: transform .7s var(--ease);
+}
+.hv-ph-b .hv-ph-frame { transform: translateY(-12px) scale(.86); transform-origin: 50% 0; }
+.hv-ph.is-on .hv-ph-frame { transform: none; }
+.hv-ph img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+/* 설명은 사진 폭 안에서만 (옆 사진과 겹치지 않게) */
+.hv-ph-cap {
+  font-family: var(--f-data); font-size: 10.5px; line-height: 1.35; letter-spacing: .02em; color: var(--ink);
+  display: flex; align-items: baseline; gap: 5px; max-width: 100%; min-height: 2.7em;
+  overflow: hidden; transition: opacity .4s var(--ease);
+}
+.hv-ph-cap::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--a); flex: none; transform: translateY(-1px); }
+.hv-ph-b .hv-ph-cap::before { background: var(--b); }
+.hv-ph.no-cap .hv-ph-cap { opacity: 0; }
+
+/* 길 위 이정표 */
+.hv-mark {
+  position: absolute; left: 0; top: 0; white-space: nowrap;
+  font-family: var(--f-data); font-size: 11px; letter-spacing: .02em; color: var(--ink);
+  padding: 3px 8px; border: 1px solid var(--rule); border-radius: var(--r-pill); background: var(--ground);
+  opacity: 0; transition: opacity .5s var(--ease);
+}
+.hv-mark.is-on { opacity: 1; }
+.hv-mark-a { border-color: var(--a); }
+.hv-mark-b { border-color: var(--b); }
+
+/* 글 */
+.hv-title {
+  position: absolute; left: clamp(20px, 4.4vw, 64px); top: clamp(76px, 11vh, 104px); z-index: 2; margin: 0;
+  font-family: var(--f-display); font-weight: 400; font-size: clamp(32px, 3.9vw, 56px);
+  letter-spacing: -.035em; line-height: 1;
+  transform-origin: 0 0; transition: transform .9s var(--ease), opacity .45s var(--ease);
+}
+.hv-title b { font-weight: 700; }
+[data-phase="start"] .hv-title { transform: scale(1.7); }
+.hv-sub {
+  position: absolute; left: clamp(20px, 4.4vw, 64px); top: calc(clamp(76px, 11vh, 104px) + clamp(70px, 8vw, 116px)); z-index: 2;
+  margin: 0; font-size: 15px; line-height: 1.6; color: var(--ink);
+  /* 첫 화면에서 1.7배로 커진 제목의 첫 글자 왼쪽 여백만큼 밀어, 제목의 글자선에 맞춤 */
+  padding-left: calc(clamp(32px, 3.9vw, 56px) * 0.11);
+  transition: opacity .6s var(--ease);
+}
+.hv-hint {
+  position: absolute; right: clamp(20px, 4.4vw, 64px); bottom: 56px; z-index: 2; margin: 0;
+  display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px 0 10px; box-sizing: border-box;
+  background: var(--surface-glass); border: 1px solid var(--rule); border-radius: var(--r-pill);
+  font-size: 13.5px; transition: opacity .6s var(--ease);
+}
+.hv-legend {
+  position: absolute; left: clamp(20px, 4.4vw, 64px); bottom: 48px; z-index: 2;
+  display: flex; flex-direction: column; gap: 8px; padding-top: 14px; border-top: 1px solid var(--rule);
+  font-family: var(--f-data); font-size: 11px; letter-spacing: .02em;
+  transition: opacity .45s var(--ease);
+}
+.hv-legend span { display: flex; align-items: center; gap: 10px; }
+.hv-count {
+  position: absolute; right: clamp(20px, 4.4vw, 64px); bottom: 48px; z-index: 2;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 4px; font-family: var(--f-data);
+  transition: opacity .6s var(--ease);
+}
+.hv-count-label { font-size: 11px; color: var(--mute); }
+.hv-count-num { font-family: var(--f-display); font-size: 56px; font-weight: 500; line-height: .9; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+
+[data-phase="start"] .hv-count { opacity: 0; }
+[data-phase="walk"] .hv-hint, [data-phase="end"] .hv-hint { opacity: 0; }
+[data-phase="walk"] .hv-sub, [data-phase="end"] .hv-sub { opacity: 0; }
+[data-phase="end"] .hv-count { opacity: 0; }
+
+/* 마지막 장면 */
+.hv-end {
+  position: absolute; right: clamp(20px, 4.4vw, 64px); bottom: 48px; z-index: 3;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 18px; text-align: right;
+  opacity: 0; visibility: hidden; transform: translateY(14px);
+  transition: opacity .7s var(--ease), transform .7s var(--ease), visibility 0s linear .7s;
+}
+[data-phase="end"] .hv-end { opacity: 1; visibility: visible; transform: none; transition: opacity .7s var(--ease) .2s, transform .7s var(--ease) .2s, visibility 0s; }
+.hv-end-copy { margin: 0; font-size: 20px; font-weight: 500; line-height: 1.4; letter-spacing: -.01em; }
+.hv-cta {
+  position: relative; display: inline-flex; align-items: center; gap: 14px; padding: 0 0 10px;
+  font-family: var(--f-display); font-size: clamp(22px, 2.2vw, 30px); font-weight: 500; letter-spacing: -.02em;
+  color: var(--ink);
+}
+/* 은은한 Hover: 밑줄이 옅은 선에서 진하게 차오르고, 화살표가 조금 나아감 */
+.hv-cta::before, .hv-cta::after { content: ""; position: absolute; left: 0; bottom: 0; height: 2px; }
+.hv-cta::before { right: 0; background: var(--rule); }
+.hv-cta::after { width: 32%; background: var(--ink); transition: width .7s var(--ease); }
+.hv-cta:hover::after, .hv-cta:focus-visible::after { width: 100%; }
+.hv-cta span { transition: transform .7s var(--ease); }
+.hv-cta:hover span, .hv-cta:focus-visible span { transform: translateX(6px); }
+.hv-cta:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; }
+
+/* ---- 전환: 버튼과 보조 글이 사라지고, 길과 실루엣은 잠시 남음 ---- */
+.is-leaving .hv-title, .is-leaving .hv-legend, .is-leaving .hv-count, .is-leaving .hv-end, .is-leaving .hv-sub, .is-leaving .hv-hint {
+  opacity: 0 !important; pointer-events: none; transition: opacity .35s var(--ease) !important;
+}
+.hv-cover {
+  position: fixed; inset: 0; z-index: 40; background: var(--ground);
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity .45s var(--ease), visibility 0s linear .45s;
+}
+.hv-cover.is-on { opacity: 1; visibility: visible; transition: opacity .45s var(--ease), visibility 0s; }
+
+@media (max-width: 760px) {
+  .hv-sub { display: none; }
+  .hv-legend { bottom: 24px; }
+  .hv-count { bottom: 24px; }
+  .hv-hint { bottom: 96px; }
+  .hv-end { left: 20px; right: 20px; bottom: 24px; align-items: flex-start; text-align: left; background: var(--ground); padding-top: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hv-ph-frame, .hv-ph-b .hv-ph-frame { transform: none; }
+  .hv-cover { transition-duration: .25s; }
+}

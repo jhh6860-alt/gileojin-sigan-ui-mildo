@@ -19,50 +19,140 @@
 - 실제로 제공되지 않은 수치·시간은 만들지 않습니다. 모르는 값은 null 로 두고 화면에는 '미입력'·'측정 예정'으로 표시합니다.
 - 포스터 기호로 셌던 잠정 수치(A 13회, B 6회)는 확정 데이터로 쓰지 않습니다.
 - 친밀도는 점수를 만들지 않고 정성적 회고 서술을 기본으로 합니다. '친밀도 증가'라는 결론을 강제하지 않습니다.
+- 사용자 제공 값(확정): A 출발 13:10(닫힌 카페). 감정 방향·강도 A-0 −2, A-1 0, A-2 +2, A-3 +1, A-4 +2, B-0 +1, B-1 +2, B-2 +1
+  (A-2 바다 +2 는 사용자 메시지의 'A-3 +2'를 바다로 해석한 값 — 사용자 확인 필요)
+- P(공간적 예상 밖): A-0 닫힌 카페, A-1 기념품샵, A-2 바다, A-3 선글라스 매장, A-4 새 카페 / I(상호작용적 예상 밖): A-1, A-2, A-3, B-1 돌담 — 장면 단위로 지정됨
+- B 의 '식당 도착 순간'과 '식당 안'은 하나의 장면 B-2 '식당 도착'으로 합침
 - 밀도 = 걷기 구간(출발~목적지 도착)의 확정 상호작용 수 ÷ 걷기 시간 × 10. 도착 후 행동은 제외.
-- B의 "벌써 도착한 게 조금 아쉽다"는 발화 시점 확인 전까지 구간 '확인 필요'(집계 보류).
+- B-2 '식당 도착'(발화 "벌써 도착한 게 조금 아쉽다" 포함)은 사용자 결정으로 구간 '도착 후'(걷기 집계 제외).
+- 페이지 구성: 홈 → 개요 → 비교 (사건 A·B 개별 페이지와 연결 페이지는 만들지 않음, 인사이트는 준비 중)
+- 상단 메뉴(개요·비교 페이지): 홈 · 개요 · 비교 · 인사이트(준비 중, 누를 수 없음). 홈에는 메뉴 없음
 - A의 카페 안 발화("여기 오길 잘했다" 등)는 '도착 후'.
-- 음악 감상·노을 감상은 '개인 경험'. 친구와의 대화·공동 행동이 확인될 때만 상호작용으로 집계.
+- 음악 감상·노을 감상은 사용자 확인으로 '개인 경험'이 아닌 함께한 경험(공동 행동으로 분류). 화면에 '개인' 표시 안 함.
+- 상호작용 기록 22건은 사용자 검토 완료 → 모두 '확정'. 화면에 '검토 전' 표시 안 함.
 - 상호작용 유형: △ 이동·계획 대화 / ○ 상황·발견 대화 / □ 공동 행동 / ♥ 감정 공유
 - P(공간적 예상 밖)는 장면에, I(상호작용적 예상 밖)는 개별 상호작용에 붙이며 4유형과 따로 집계.
 - 원본 데이터 기준표: docs/장면_데이터_시트.xlsx (js/data.js 와 같은 기준)
 
 ## 기술 구성
 - 순수 HTML + CSS + JavaScript. 빌드 도구·패키지 설치 없음. React 등 프레임워크 없음.
-- 외부 리소스: Google Fonts (Hahmlet, IBM Plex Sans KR, IBM Plex Mono) 뿐. 오프라인이면 대체 글꼴로 보임.
+- 외부 리소스: Google Fonts (Bricolage Grotesque, Space Grotesk, IBM Plex Mono, IBM Plex Sans KR) 뿐. 오프라인이면 대체 글꼴로 보임.
 - index.html 을 브라우저로 열면 바로 실행됩니다 (file:// 에서도 동작, fetch 사용 안 함).
 - 홈은 1440×900 '보드'를 화면에 맞춰 통째로 확대·축소합니다 (home.js 의 fit()).
 
 ## 파일 구조
 ```
-index.html            페이지 구조: 상단 내비 + 홈 + 이후 섹션 자리(stub)
+(아래 index.html·home.js 두 줄은 예전 홈 기준 — 현재는 사용하지 않음, _backup 참고)
+index.html (예전)     페이지 구조: 상단 내비 + 홈 + 이후 섹션 자리(stub)
 css/style.css         색·글꼴 토큰(:root), 홈과 섹션 스타일
 js/data.js            SITE_DATA: 감정·상호작용 유형·사건·장면·상호작용·사진 + 홈 설정(SITE_DATA.home)
 js/home.js            홈 인터랙션 (스크롤 진행, 커서 반응, 사진 배치, 실루엣, 갈림길)
+js/overview.js        개요 인터랙션 (두 경로 지도, 장면 기록 고정, 네 가지 기준, 시안 전환)
+css/overview.css      개요 전용 스타일 (style.css 의 토큰 사용)
+[확정 구조] 홈 index.html → (버튼) overview.html → (버튼) comparison.html
+index.html            홈 (확정, 예전 Home V2). 예전 홈+예전 개요는 _backup/index.old-home.html
+home-v2.html          예전 주소 — index.html 로 자동 이동만 함
+                      아래 'home-v2' 설명은 index.html 의 홈에 해당 (입체적인 길 하나 + 스크롤로 걷기. A 사진은 길 위쪽, B 는 아래쪽)
+                      마지막 장면의 '두 번의 걷기 펼쳐보기 →' 클릭 때만 Road Zoom 전환 → overview.html
+                      (홈에서는 개요가 버튼으로만 열리도록 섹션 메뉴를 숨김)
+css/home-v2.css · js/home-v2.js   새 홈 전용. 걷는 속도는 일정(SPEED), 전환 시간은 LEAVE 값
+overview.html         개요 단독 페이지 (index.html 의 개요와 같은 내용·같은 overview.js/css 사용 — 개요를 고치면 두 파일 모두 반영 필요)
+                      ?from=home 으로 열리면 맨 위에서 시작, 바닥색 막이 걷히며 등장
+                      마지막에 '두 걷기 나란히 보기 →' 버튼 (comparison.html, 누를 때만 이동). 개요는 이 버튼 외 수정 금지(사용자 지시)
+comparison.html       비교 페이지 — 가운데 큰 질문 + 왼쪽 A / 오른쪽 B, 스크롤 진행도로 4개 장면 전환
+css/comparison.css · js/comparison.js   비교 전용. 01 TRIGGER · 02 EXPERIENCE · 03 EMOTION · 04 INSIGHT
+                      개요 내용(장면 타임라인·사진·상세)을 반복하지 않음. 감정 높이=사용자 회고 점수, 경험 구성도는 비정량
+                      상호작용 횟수·밀도 그래프는 아직 넣지 않음(요청 시 추가). 시간 비례 그래픽은 B 의 계획 8분/실제 약 20분 막대뿐
+_backup/              수정 전 백업 (overview.before-compare-button.html)
+
+## 본 사이트 보정 (index · overview · comparison 전용, Citrus 시안과 분리)
+- 홈 스크립트는 js/home-main.js (home-v2.js 복사본 — home-v2.js 는 Citrus v1·v2 가 계속 사용). 직립 픽토그램 실루엣, 비스듬한 대열, 최소 크기, 출발 이정표 s=-78
+- css/main-fix.css: 감정 4색(#7C3AED · #10B981 · #FFC107 · #FF3D7F), 실루엣 스타일, 좁은 화면 홈 마지막 장면 범례 숨김, 개요 장면 지도 최소 폭 580px(좁으면 지도만 가로 스크롤)
+- 사진 카드(홈 .hv-ph-frame · 개요 .ov-ph): 흰 4px 테두리 제거, 1px 옅은 선 + 부드러운 그림자 (main-fix.css). 홈 풍경이 사진·설명 밑에 깔리면 .is-under 로 숨김
+- 홈 제목(h1): '걷는 동안 우리는 무엇을 마주했을까?' — 첫 화면 배율은 최대 1.3배(TITLE_MAX)이고 화면 폭에 맞춤(--title-s, fitTitle), 좁으면 두 줄. 홈 헤더에도 홈·개요·비교·인사이트 내비게이션. 로고 링크는 세 페이지 모두 index.html. 개요 첫 화면 제목은 '길어진 시간은 무엇으로 채워졌을까?' 유지. 감정 다이아몬드(.ov-emo)는 점 바로 위(이름표가 위에 있으면 아래)에, 이름표보다 위에 그림
+- 개요 '차이 읽기 →' 는 홈 CTA 와 같은 디자인(.ov-cta)으로 하단 중앙. 두 번째 화면 하단 상세(#ov-detail-2) 제거
+- 되돌리기: _backup/index.before-fix4.html · overview.before-fix4.html · comparison.before-fix4.html 로 덮어쓰기
+
+## 실험 시안: Citrus Graphic Edition (원본은 그대로)
+- 페이지: citrus.html(홈) → citrus-overview.html → citrus-comparison.html. 각 페이지 오른쪽 위 'Original 보기 ↗'로 같은 원본 페이지로 이동
+- 파일: css/citrus.css(색·배경·미세 모션 덧씌움), js/citrus.js(배경 블롭·잎 + 기존 경로선을 따라 그리는 껍질 리본)
+- 원본 JS·CSS·데이터는 그대로 사용. 원본 변경은 home-v2.js 의 이동 주소 한 줄(버튼 data-target 이 있으면 그 주소)뿐
+- 되돌리기: citrus.html, citrus-overview.html, citrus-comparison.html, css/citrus.css, js/citrus.js 다섯 파일 삭제
+
+## 실험 시안: Citrus Graphic Edition v2 (원본·v1 그대로)
+- 페이지: citrus2.html → citrus2-overview.html → citrus2-comparison.html / 파일: css/citrus2.css, js/citrus2.js
+- 색: A 오렌지 #FF7A1A(작은 글자 #B84A00) / B 그린 #6DDB18(작은 글자 #367D08). 감정 '안정·평온'은 B 와 헷갈리지 않게 블루그레이 #6F93B8
+- 껍질 선: 한 선 = 한 색(가운데 색 띠 없음), 천천히 변하는 유기적 폭 + 미세한 가장자리 + 끝이 가늘어짐
+- 홈만 A·B 가 감김(교차부는 위로 지나가는 선 둘레에 바탕색 틈). 개요·비교는 꼬이지 않는 정돈된 선
+- 버튼·링크 클릭 시 주변 과즙 방울 효과(동작 줄이기 설정이면 생략). 페이지 이동 링크는 0.3초 뒤 이동
+- 되돌리기: citrus2.html, citrus2-overview.html, citrus2-comparison.html, css/citrus2.css, js/citrus2.js 삭제
+
+## 실험 시안: Citrus Graphic Edition v3 (원본·v1·v2 그대로, v2 를 복사해 디테일 개선)
+- 페이지: citrus3.html → citrus3-overview.html → citrus3-comparison.html / 파일: css/citrus3.css, js/citrus3.js, js/home-v3.js(홈 스크립트, home-v2.js 복사본)
+- 색: B 녹색 #20C24A(작은 글자 #137A2E). 감정 4색 당황 #8A5CF6 · 안정 #0FA3A3 · 즐거움 #F2B300 · 만족 #FF5C8A
+- 사진: 흰 프레임 없이 1px 옅은 선 + 부드러운 그림자 (크기·위치 동일)
+- 홈 실루엣: 직립 픽토그램(머리·몸통 면 + 팔다리 선), 길 위 실제 지점에 앞뒤 간격, 최소 크기 보장, 아래쪽 사람을 앞에 그림
+- 장면 팝업(.ov-tip/.cp-tip): 반투명 흰 바탕 + 검은 글자 + blur, A 오렌지 / B 녹색 은은한 그라데이션 (citrus3.js 가 data-ev 표시)
+- 과즙 효과: 버튼 실제 크기에 비례, 같은 버튼 재클릭 시 이전 효과 제거(누적 없음), 큰 이동 영역은 누른 지점 둘레만
+- 홈 CTA: 글자 아래에만 얇은 밑줄 + 원 안의 화살표 / 개요 '차이 읽기': 얇은 구분선, Hover 때 선이 차오르고 화살표 원이 채워짐 (citrus3-overview.html 의 인라인 스타일)
+- Road Zoom 흔들림 원인과 수정 (home-v3.js):
+  1) 전환 시작에 html overflow:hidden → 스크롤바가 사라지며 화면 폭이 바뀌어 장면 전체가 옆으로 튐 → 대신 wheel/touchmove/스크롤 키만 preventDefault
+  2) 사라진 뒤에도 매 프레임 사진 너비를 수천 px 로 바꾸고 offsetHeight 로 레이아웃 강제 → 시작 때 비율을 재 두고, 다 사라진 층은 숨기고 갱신 중단
+  3) 거대해지는 사진·풍경을 포함한 층 전체에 perspective rotateX → 기울임은 길 SVG 에만, 전환 중 그림자·번짐 제거
+  - pageshow(뒤로 가기) 때 잠금·숨김·변형을 모두 원래대로
+- 되돌리기: citrus3.html, citrus3-overview.html, citrus3-comparison.html, css/citrus3.css, js/citrus3.js, js/home-v3.js 삭제
+- 개요 정리(v3): '네 가지 기준' 섹션을 기준 의미만 보여 주는 안내(탭 + 추상 그래픽, css/ov-guide.css · js/ov-guide.js)로 교체, 하단 '차이 읽기' 이동 영역 삭제.
+  이전 개요는 _backup/citrus3-overview_before-guide.html (복구: 이 파일을 citrus3-overview.html 로 덮어쓰기)
+
+## 배포
+- 주소: https://claude.ai/artifact/UMAwy6ey32jJGFopaTxceD (claude.ai 아티팩트, 공유는 페이지의 Share 메뉴에서 사용자가 설정)
+- 첫 페이지는 index.html 내용을 HTML 뼈대 없이 옮긴 사본(home.html). 나머지 파일은 같은 상대 경로로 함께 올림
+- 아티팩트는 주소의 ?from=home 을 넘기지 않으므로, 홈→개요 도착 표시는 sessionStorage('fromHome')로도 전달
+- 개요·비교는 열릴 때 항상 맨 위(첫 장면)에서 시작 (#위치가 있을 때만 예외)
 assets/photos/        여행 사진 17장 (가로 900px JPG, 파일명 = data.js 의 photo id)
 docs/                 장면 데이터 시트
 reference/design-comps-v1/   이전 디자인 시안(A안/B안, 사건 B 화면 시안). 참고용, 최종 사이트에 포함하지 않음
 ```
 
 ## 디자인 언어 (전 섹션 공통으로 유지)
-- 바닥 #F6F5F2, 글자 #171716, 보조 #6F6D67, 구분선 #DEDCD5
-- 사건 A 색 #2C6E73 (바다의 청록), 사건 B 색 #B0526A (노을의 장밋빛)
-- 사진: 흰 테두리 5px + 평면 그림자(5px 7px 0 rgba(23,23,22,.09)), 사건·시각 라벨을 항상 함께
-- 글꼴: 제목 Hahmlet(굵기 대비 — '밀도'만 700), 본문 IBM Plex Sans KR, 데이터·라벨 IBM Plex Mono
+디자인 시스템: Redline (Metic Studio 추출 토큰 기반, 사용자 요청으로 홈에 적용됨).
+원칙: 종이색 바닥 · 1px 헤어라인(그림자 대신 선) · 누르는 것은 알약(pill) 모양 · 빨간 시그널은 하나.
+- 바닥 #FCFCFC, 들어간 면 #E9E9E6, 글자 #121214, 보조 #62626A, 구분선 rgba(18,18,20,.12)
+- 빨강 #FF3E3E(선·면·큰 글자), 진한 빨강 #C62828(작은 빨간 글자, 버튼 호버)
+- 사건 A (낮) = 주황 #F25C05, 진한 색(작은 글자) #F24405
+- 사건 B (저녁) = 파랑 #2E6CFF, 진한 색(작은 글자) #2635D9
+  (색은 style.css :root 의 --a/--b/--a-text/--b-text 네 값만 바꾸면 사이트 전체에 반영)
+- 사진: 바닥색 테두리 + 1px 헤어라인, 바깥 모서리 12px·사진 모서리 8px, 그림자 없음. 사건·시각 라벨을 항상 함께
+  (사진 설명 글자는 A·B 모두 검정 #121214)
+- 버튼·내비: 알약 모양. 주요 버튼 = 검정 바탕(호버 진한 빨강), 보조 = 반투명 바탕 + 헤어라인
+- 라벨·뱃지: IBM Plex Mono 11px, 알약 테두리 + 사건 색 점(6px)
+- 글꼴: 제목 Bricolage Grotesque(한글은 IBM Plex Sans KR로 이어짐, 굵기 대비 — '밀도'만 700),
+  본문 Space Grotesk(+IBM Plex Sans KR) 500, 데이터·라벨 IBM Plex Mono
+- 움직임: cubic-bezier(0.23, 1, 0.32, 1) 하나로 통일
 - 세 사람: 특정 인물이 아닌 상징적인 검정 실루엣, 위에서 내려다본 시점, 항상 오른쪽을 향함
 - 감정 4색(사건 섹션용, 이전 시안 기준): 당황·혼란·불안 #7B6BB2 / 안정·평온 #7FA978 / 기쁨의 시작·즐거움 #DDB23A / 만족·행복감 #E58597
 - 카드형 템플릿·대시보드처럼 보이는 구성은 피합니다.
 
-## 홈 인터랙션 (완료, 사용자 승인 상태 — 임의 변경 금지)
+## (예전) 홈 인터랙션 — 현재 홈은 위 파일 구조의 index.html(홈 V2) 설명을 따름
 - 단계: data-phase = start(첫 화면) → walk(걷는 중) → fork(갈림길). 스크롤 진행도로 전환.
+- 첫 화면(start)에서만 제목 '길어진 시간의 밀도'를 1.7배로 크게, 걷기가 시작되면 원래 크기로 (style.css)
 - 스크롤: 세 사람이 오른쪽으로 걷고, 일정 간격(142px)마다 사진이 A 위 / B 아래로 번갈아 놓임. 카메라가 따라가 길이 왼쪽으로 흐름.
 - 커서: 세 사람 주변 범위(ZONE)에서만 반응. 위아래로 길을 최대 60px 휘게, 앞쪽으로 최대 110px 더 걷게 함.
 - 갈림길: 세 사람이 (536,522)로 모이고 두 가닥이 사건 A·B 입구로 그려짐. 입구 사진·링크, 길 위 사진 클릭 시 해당 사건 섹션으로 이동.
 - 홈의 길은 실제 이동 경로가 아니라 두 걷기의 장면을 엮은 개념적 길입니다. 홈에 사건 A/B의 상세 분석을 넣지 않습니다.
 - 조절 값은 home.js 맨 위 '조절하기 쉬운 값들'에 모여 있습니다.
 
+## 개요 (시안 3 '두 개의 세로 단' 채택 — 다른 시안은 삭제됨)
+- 구성: 01 길어진 시간은 무엇으로 채워졌을까?(두 세로 경로·사진·장면) → 02 네 가지 기준(TIME/DISCOVERY/ACTION/EMOTION) → 03 사건 A·B 링크
+- 경로·사진 배치: js/overview.js 맨 위 LAYOUT. 사진은 이름표 아래 층(z-index)에 놓여 글을 가리지 않음. 스크롤 중에는 사진 확대 반응 없음
+- 섹션 01 큰 지도와 섹션 02 작은 지도가 같은 상태(선택 기준·선택 장면)를 공유
+- 기준 판정: DISCOVERY = P 또는 상황·발견 대화, ACTION = 공동 행동(+I 표기), EMOTION = 감정 종류(색 네모) + 방향·강도(눈금)
+- P·I 는 해당하는 장면에만 표식. 해당하지 않으면 아무것도 표시하지 않음('없음'이라고 쓰지 않음)
+- 시간 비례 그래픽은 섹션 02 TIME 의 막대(A 약 60, B 계획 8/실제 약 20)뿐
+- 감정 색은 감정 기준에서만, 사건 색과 다른 네모 표식으로 사용. 사진은 흑백 처리하지 않음
+
 ## 미완성 (다음 작업)
-- 개요, 사건 A, 사건 B, 비교, 연결, 인사이트 섹션: index.html 에 자리(stub)만 있음
+- 사건 A, 사건 B, 비교, 연결, 인사이트 섹션: index.html 에 자리(stub)만 있음
 - 사건 A: 유기적 곡선 경로 + 감정 데이터 시각화 레퍼런스 사용 예정
 - 사건 B: 시간 확장형 타임라인 (reference/design-comps-v1 의 사건 B 시안 참고 가능)
 - 데이터: 감정 강도(−2~+2), 관계 회고 서술, 사건 A 출발·도착 시각, 상호작용 확정 여부가 아직 미입력

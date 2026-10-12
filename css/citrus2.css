@@ -1,0 +1,133 @@
+/* ==========================================================================
+   Citrus Graphic Edition v2 — 실험 시안 (원본·v1 위에 덧씌우지 않고 별도 파일)
+   · citrus2*.html 에서만 불러옵니다. 지우면 v2 시안만 사라집니다.
+   · v1 대비: B = 그린, 껍질 선의 속껍질(가운데 색 띠) 없음, 홈만 꼬임 / 이후 페이지는 정돈된 껍질 선
+   ========================================================================== */
+:root {
+  /* 바탕·글자 */
+  --ground: #FFFBF4;            /* 아주 옅은 크림 */
+  --surface-sunken: #F7EEE1;
+  --surface-glass: rgba(255, 251, 244, 0.86);
+  --ink: #17161A;
+  --mute: #6A645E;
+  --body2: #6A645E;
+  --rule: rgba(23, 22, 26, 0.12);
+  --mat: #FFFDF9;
+  --walker-shadow: #EADCC8;
+
+  /* 두 사건 — A 오렌지 / B 그린 (선·점·면은 --a/--b, 작은 글자는 --a-text/--b-text) */
+  --a: #FF7A1A;                 /* 시트러스 오렌지 */
+  --b: #6DDB18;                 /* 선명한 그린 */
+  --a-text: #B84A00;            /* 크림 바탕 작은 글자 4.5:1 이상 (약 5:1) */
+  --b-text: #367D08;            /* 크림 바탕 작은 글자 4.5:1 이상 (#6DDB18 은 글자로는 대비 부족) */
+
+  /* 오렌지 그래픽 보조 톤 (배경·과즙 효과 전용 — 사건 색으로 쓰지 않음) */
+  --c-yellow: #FFB43C;
+  --c-apricot: #FF9E6B;
+  --c-red: #FF5A36;
+  --c-leaf: #8E9970;            /* 잎: B 그린과 헷갈리지 않게 채도를 낮춘 올리브 그레이 */
+  --c-leaf-2: #B3BB97;
+  /* 껍질 선: 사건마다 한 가지 색만 (가운데 다른 색 띠 없음) */
+  --peel-a: #FF7A1A;
+  --peel-b: #6DDB18;
+  --peel-edge-a: #E8650A;       /* 아주 미세한 바깥 가장자리 */
+  --peel-edge-b: #58C010;
+}
+/* 감정 '안정·평온' 초록이 사건 B 그린과 헷갈리지 않도록 v2 에서는 블루그레이로 */
+.ov, .cp { --emo-2: #6F93B8; }
+
+body { background: var(--ground); }
+main { position: relative; z-index: 1; }
+.site-header { background: linear-gradient(var(--ground) 55%, rgba(255, 251, 244, 0)); }
+
+/* ---------- 원본과 비교하는 스위치 ---------- */
+.citrus-switch {
+  justify-self: end; pointer-events: auto;
+  display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 12px 0 10px;
+  border: 1px solid var(--rule); border-radius: var(--r-pill); background: var(--surface-glass);
+  font-family: var(--f-data); font-size: 11px; letter-spacing: .02em; color: var(--ink); white-space: nowrap;
+  transition: background-color .3s var(--ease), border-color .3s var(--ease);
+}
+.citrus-switch i { width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle at 40% 40%, var(--c-yellow), var(--a) 70%); }
+.citrus-switch:hover { background: var(--surface-sunken); border-color: var(--mute); }
+
+/* ---------- 배경: 흐릿한 오렌지 블롭 + 평면 잎 (아주 옅게) ---------- */
+.citrus-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.cb { position: absolute; border-radius: 50%; filter: blur(26px); opacity: .4; will-change: transform; animation: citrusDrift 22s ease-in-out infinite alternate; }
+.cb-1 { width: 46vmax; height: 46vmax; right: -14vmax; top: -16vmax;
+  background: radial-gradient(circle at 42% 44%, var(--a) 0%, var(--c-yellow) 34%, rgba(255, 180, 60, 0) 68%); }
+.cb-2 { width: 30vmax; height: 26vmax; left: -10vmax; bottom: -10vmax; opacity: .32; animation-duration: 28s;
+  background: radial-gradient(circle at 55% 45%, var(--c-red) 0%, var(--c-apricot) 36%, rgba(255, 158, 107, 0) 70%); }
+.cb-3 { width: 14vmax; height: 14vmax; left: 22vw; top: 54vh; opacity: .24; animation-duration: 18s;
+  background: radial-gradient(circle, var(--c-yellow) 0%, rgba(255, 180, 60, 0) 68%); }
+.cb-4 { width: 9vmax; height: 9vmax; right: 18vw; bottom: 10vh; opacity: .2; animation-duration: 24s;
+  background: radial-gradient(circle, var(--c-apricot) 0%, rgba(255, 158, 107, 0) 70%); }
+.citrus-leaves { position: absolute; right: 1.5vmax; top: 4.5vmax; width: 13vmax; height: auto; opacity: .34; transform: rotate(-18deg); }
+.citrus-leaves .lf { fill: var(--c-leaf); }
+.citrus-leaves .lf2 { fill: var(--c-leaf-2); }
+.citrus-leaves .vein { fill: none; stroke: rgba(255, 251, 244, .5); stroke-width: 1.2; }
+@keyframes citrusDrift { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(-2vmax, 1.6vmax) scale(1.05); } }
+
+/* ---------- 껍질 선 (js/citrus2.js 가 그림): 사건마다 한 색, 미세한 가장자리 ---------- */
+.peel-a { fill: var(--peel-a); stroke: var(--peel-edge-a); stroke-width: .6; stroke-linejoin: round; }
+.peel-b { fill: var(--peel-b); stroke: var(--peel-edge-b); stroke-width: .6; stroke-linejoin: round; }
+.peel-shadow { fill: rgba(120, 60, 0, .07); }
+/* 교차할 때 위로 지나가는 선 둘레의 바탕색 테두리 → 색이 섞이지 않고 위·아래로 엇갈려 보임 */
+.peel-gap { fill: var(--ground); stroke: var(--ground); stroke-linejoin: round; }
+/* 원래 선은 껍질 선 가운데의 아주 가는 솔기로만 (그리기 진행·강조는 원래 코드가 담당) */
+.citrus-seam { stroke-width: .8 !important; opacity: .35; }
+
+/* ---------- 홈 ---------- */
+.hv-stage { background: transparent; }
+.hv-road, .hv-slab, .hv-ahead { display: none; }
+.hv-lane { opacity: 0; }
+.hv-ahead-line { stroke: var(--c-apricot); stroke-width: 2; stroke-dasharray: 1 9; opacity: .9; }
+.hv-post { stroke: rgba(23, 22, 26, .22); }
+.hv-foot { fill: var(--ink); }
+.d-grass { stroke: var(--c-leaf-2); }
+.d-shrub { fill: var(--c-apricot); opacity: .55; filter: blur(1.5px); }
+.d-leaf { fill: var(--c-leaf); }
+.d-leaf-hi { fill: var(--c-leaf-2); }
+.d-trunk { stroke: var(--c-leaf); }
+.d-shadow { fill: rgba(120, 60, 0, .06); }
+.d-wall-l, .d-wall-r, .d-roof, .d-roof-edge { display: none; }
+.d-stone { fill: var(--c-yellow); opacity: .7; }
+.hv-ph { isolation: isolate; }
+.hv-ph::before {
+  content: ""; position: absolute; left: -18%; right: -18%; top: -14%; bottom: -14%; z-index: -1;
+  border-radius: 50%; background: radial-gradient(circle, rgba(255, 140, 40, .5), rgba(255, 180, 60, 0) 68%);
+  filter: blur(14px); opacity: 0; pointer-events: none;
+}
+.hv-ph.is-on::before { animation: citrusBloom 1.6s var(--ease) both; }
+@keyframes citrusBloom { 0% { opacity: 0; transform: scale(.7); } 35% { opacity: 1; } 100% { opacity: 0; transform: scale(1.15); } }
+.hv-ph-frame { border-radius: 14px; }
+.hv-mark { background: var(--ground); }
+
+/* ---------- 개요 ---------- */
+.ov-label { background: rgba(255, 251, 244, .9); }
+.ov-leader { stroke-dasharray: 1 4; }
+.ov-dot { box-shadow: 0 0 0 3px var(--ground); }
+
+/* ---------- 비교 ---------- */
+.cp-stage { background: transparent; }
+.cp-bar-plan { stroke: var(--b); opacity: .35; }
+.cp-area-a { fill: var(--c-yellow); fill-opacity: .22; }
+.cp-band-shared { fill: rgba(109, 219, 24, .16); stroke: var(--b-text); }
+.cp-pill-b { stroke: var(--b-text); }
+
+/* ---------- 버튼 클릭: 주변에 과즙이 살짝 튀는 효과 ---------- */
+.juice { position: fixed; left: 0; top: 0; width: 0; height: 0; z-index: 60; pointer-events: none; }
+.juice i {
+  position: absolute; left: 0; top: 0; border-radius: 50%;
+  background: radial-gradient(circle at 38% 35%, rgba(255, 214, 140, .95), rgba(255, 122, 26, .75) 60%, rgba(255, 122, 26, 0) 100%);
+}
+.juice b {
+  position: absolute; left: -22px; top: -22px; width: 44px; height: 44px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 150, 50, .32), rgba(255, 150, 50, 0) 70%);
+  filter: blur(4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cb { animation: none; }
+  .hv-ph.is-on::before { animation: none; }
+}

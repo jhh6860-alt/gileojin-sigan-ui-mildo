@@ -1,0 +1,58 @@
+/* ==========================================================================
+   본 사이트(index · overview · comparison) 전용 보정 — Citrus 시안들은 이 파일을 불러오지 않습니다.
+   · 홈 실루엣(직립 픽토그램), 글자·사진 겹침 정리, 더 선명한 감정 4색
+   · 되돌리기: 세 페이지에서 이 파일 <link> 를 빼고, index.html 의 js/home-main.js 를 js/home-v2.js 로
+   ========================================================================== */
+
+/* ---------- 감정 4색: 더 쨍하게 (사건 A 오렌지 #F25C05 · B 파랑 #2E6CFF 과 겹치지 않는 색상 영역) ---------- */
+.ov, .cp {
+  --emo-1: #7C3AED;   /* 당황·혼란·불안 — 선명한 보라 */
+  --emo-2: #10B981;   /* 안정·평온 — 선명한 초록 */
+  --emo-3: #FFC107;   /* 기쁨의 시작·즐거움 — 옐로 골드 */
+  --emo-4: #FF3D7F;   /* 만족·행복감 — 핫 핑크 */
+}
+
+/* ---------- 사진 카드: 두꺼운 흰 테두리(4px 여백) 제거 → 아주 얇은 선 + 부드러운 그림자만 ----------
+   크기·위치는 그대로 (테두리 자리만큼 사진이 조금 더 크게 보임) */
+.hv-ph-frame, .ov-ph {
+  padding: 0; overflow: hidden;
+  background: var(--surface-sunken);                       /* 사진을 불러오기 전 자리 표시 */
+  border: 1px solid rgba(17, 17, 17, .08);
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(17, 17, 17, .06), 0 8px 22px -12px rgba(17, 17, 17, .28);
+}
+.hv-ph img, .ov-ph img { border-radius: 0; }
+.ov-ph.is-in.is-hover { border-color: rgba(17, 17, 17, .28); box-shadow: 0 2px 4px rgba(17, 17, 17, .08), 0 14px 30px -12px rgba(17, 17, 17, .35); }
+.ov-ph.is-in.is-selected { border-color: var(--ink); }
+
+/* ---------- 홈 제목: 첫 화면 배율을 화면 폭에 맞춤 (--title-s 는 js/home-main.js 가 계산) ---------- */
+[data-phase="start"] .hv-title { transform: scale(var(--title-s, 1.3)); }
+.hv-title { text-wrap: balance; }
+
+/* ---------- 홈: 세 사람 (js/home-main.js) ---------- */
+.walker-up .w-body { fill: var(--ink); stroke: none; }
+.walker-up .w-limb { stroke: var(--ink); stroke-width: 2.4; stroke-linecap: round; fill: none; }
+.walker-up .w-arm { stroke-width: 1.9; }
+.walker-up .walker-ground { fill: var(--walker-shadow); stroke: none; }
+
+/* 홈: 사진·설명 밑에 깔리는 풍경(집·나무 등)은 살며시 숨김 (js/home-main.js 가 표시) */
+.hv-deco.is-under { opacity: 0 !important; transition: opacity .3s var(--ease); }
+
+/* 홈 마지막 장면: 좁은 화면에서 범례가 버튼 뒤에 겹쳐 남지 않게 */
+@media (max-width: 760px) {
+  [data-phase="end"] .hv-legend { opacity: 0; }
+}
+
+/* ---------- 개요: 감정 다이아몬드가 장면 이름표(반투명 바탕)에 가려 잘려 보이지 않게
+   점의 오른쪽 위(이름표가 시작되는 자리) 대신 점 바로 위의 빈 자리로, 이름표보다 위에 그림.
+   이름표가 점 위에 있는 장면은 점 아래로 ---------- */
+.ov-emo { z-index: 2; margin: -28px 0 0 -5px; box-shadow: 0 0 0 2px var(--ground); }
+.ov-label--above ~ .ov-emo { margin: 18px 0 0 -5px; }
+
+/* ---------- 개요: 좁은 화면에서 장면 지도가 너무 줄어 A·B 이름표와 사진이 겹치지 않게
+   지도를 일정 폭 이하로 줄이지 않고, 지도 영역만 가로로 넘겨 볼 수 있게 ---------- */
+@media (max-width: 620px) {
+  /* 가로 스크롤 영역은 위·아래로 넘친 것도 잘라내므로, 맨 위·아래 장면의 표식이 잘리지 않게 여유를 둠 */
+  .ov-scroller { overflow-x: auto; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; padding: 24px 0 24px; margin: -24px 0 -16px; }
+  #ov-stage { min-width: 580px; }
+}

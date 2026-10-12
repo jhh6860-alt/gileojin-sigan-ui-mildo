@@ -67,8 +67,8 @@
   const gFork = el("g", { class: "fork" }, svg);
   el("path", { class: "fork-strand thread-a", pathLength: 1, d: "M536,522 C660,470 720,300 860,290" }, gFork);
   el("path", { class: "fork-strand thread-b", pathLength: 1, d: "M536,522 C660,575 720,660 860,650" }, gFork);
-  el("circle", { class: "fork-knot", cx: 860, cy: 290, r: 3.4, fill: "#2C6E73" }, gFork);
-  el("circle", { class: "fork-knot", cx: 860, cy: 650, r: 3.4, fill: "#B0526A" }, gFork);
+  el("circle", { class: "fork-knot knot-a", cx: 860, cy: 290, r: 3.4 }, gFork);
+  el("circle", { class: "fork-knot knot-b", cx: 860, cy: 650, r: 3.4 }, gFork);
   const gGhost = el("g", { class: "ghost" }, svg);
   const ghostLine = el("path", { class: "ghost-line" }, gGhost);
   el("circle", { class: "ghost-ring", cx: 1146, cy: 322, r: 12 }, gGhost);
@@ -111,6 +111,10 @@
 
   /* ---------- 사진: 정해진 자리에 일정한 간격으로 ---------- */
   const PW = 150, PH = 112, HW = PW / 2 + 5, HH = PH / 2 + 5;
+  const MAT_R = 12, IMG_R = 8;   // 사진 테두리·사진의 모서리 둥글기
+  /* 사진 모서리를 둥글게 자르는 틀 (모든 사진이 같은 크기라 하나를 같이 씀) */
+  const clip = el("clipPath", { id: "ph-clip", clipPathUnits: "objectBoundingBox" }, el("defs", null, svg));
+  el("rect", { width: 1, height: 1, rx: IMG_R / PW, ry: IMG_R / PH }, clip);
   const items = CFG.initial.concat(CFG.sequence).map((id, k) => {
     const side = id.startsWith("a-") ? "A" : "B";
     const x = FIRST_PHOTO_X + k * PHOTO_STEP;
@@ -129,9 +133,8 @@
     item.knot = el("circle", { class: "knot", cx, r: 2.6 }, link);
     const pg = el("g", { transform: `translate(${cx},${cy.toFixed(1)}) rotate(${item.k % 2 ? 1.5 : -1.5})` }, link);
     const inner = el("g", { class: "ph-in" }, pg);
-    el("rect", { class: "ph-drop", x: -HW + 5, y: -HH + 7, width: HW * 2, height: HH * 2 }, inner);
-    el("rect", { class: "ph-mat", x: -HW, y: -HH, width: HW * 2, height: HH * 2 }, inner);
-    const img = el("image", { x: -PW / 2, y: -PH / 2, width: PW, height: PH, preserveAspectRatio: "xMidYMid slice" }, inner);
+    el("rect", { class: "ph-mat", x: -HW, y: -HH, width: HW * 2, height: HH * 2, rx: MAT_R }, inner);
+    const img = el("image", { x: -PW / 2, y: -PH / 2, width: PW, height: PH, preserveAspectRatio: "xMidYMid slice", "clip-path": "url(#ph-clip)" }, inner);
     img.setAttribute("href", item.photo.file);
     el("title", null, img).textContent = item.photo.alt;
     const cap = el("text", { class: "ph-cap", x: -PW / 2, y: item.side === "A" ? -HH - 9 : HH + 18 }, inner);

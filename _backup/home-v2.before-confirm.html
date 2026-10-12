@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>길어진 시간의 밀도 — Home V2 시안</title>
+<meta name="description" content="제주 여행 속 두 번의 걷기에서 나타난 발견, 상호작용과 감정의 변화 (홈 V2 시안)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..700&family=Space+Grotesk:wght@500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<!-- 색·글꼴 토큰과 상단 바는 기존 style.css 를 그대로 씁니다 (기존 홈 파일은 수정하지 않음) -->
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/home-v2.css">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+
+<!-- 홈에서는 개요가 '두 번의 걷기 펼쳐보기' 버튼으로만 열리도록 섹션 메뉴를 두지 않습니다 -->
+<header class="site-header hv-header">
+  <a class="brand" href="home-v2.html">길어진 시간의 밀도</a>
+  <span></span>
+  <a class="site-meta hv-draft" href="index.html">Home V2 시안 · 기존 홈 보기 ↗</a>
+</header>
+
+<main>
+  <!-- ================= 홈 V2 · Scroll to Walk ================= -->
+  <section id="hv" class="hv" aria-label="홈 (V2 시안)">
+    <div class="hv-stage" id="hv-stage" data-phase="start">
+      <!-- 길·풍경·사진: 전환 때 이 층 전체가 길 끝을 향해 다가갑니다 -->
+      <div class="hv-world" id="hv-world">
+        <svg class="hv-svg" id="hv-svg" aria-hidden="true"></svg>
+        <div class="hv-layer" id="hv-layer"></div>
+      </div>
+
+      <h1 class="hv-title" id="hv-title">길어진 시간의 <b>밀도</b></h1>
+      <p class="hv-sub">제주 여행 속 두 번의 걷기에서 나타난<br>발견, 상호작용과 감정의 변화</p>
+
+      <p class="hv-hint" aria-hidden="true"><span class="mouse"></span>스크롤하면 세 사람이 걷기 시작합니다</p>
+
+      <div class="hv-legend" id="hv-legend">
+        <span><i class="line line-a"></i>A · 낮의 걷기 — 길 위쪽</span>
+        <span><i class="line line-b"></i>B · 저녁의 걷기 — 길 아래쪽</span>
+      </div>
+
+      <div class="hv-count" aria-live="polite">
+        <span class="hv-count-label">지나온 장면</span>
+        <span class="hv-count-num" id="hv-count">0</span>
+      </div>
+
+      <!-- 마지막 장면에서만 나타남 -->
+      <div class="hv-end" id="hv-end" inert>
+        <p class="hv-end-copy">한 번의 낮, 한 번의 저녁.<br>길어진 시간이 길 위에 남았습니다.</p>
+        <a class="hv-cta" id="hv-cta" href="overview.html">두 번의 걷기 펼쳐보기 <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- 전환의 마지막: 길 표면이 화면을 채운 뒤 평면(개요)으로 넘어가는 막 -->
+<div class="hv-cover" id="hv-cover" aria-hidden="true"></div>
+
+<script src="js/data.js"></script>
+<script src="js/home-v2.js"></script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>개요 — 길어진 시간의 밀도</title>
+<meta name="description" content="두 번의 걷기를 하나의 프레임으로 — 길어진 시간은 무엇으로 채워졌을까?">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..700&family=Space+Grotesk:wght@500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/overview.css">
+<style>
+  body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+  /* 홈의 '두 번의 걷기 펼쳐보기' 전환에서 이어질 때: 바닥색 막이 걷히며 개요가 나타남 */
+  .arrive-cover { position: fixed; inset: 0; z-index: 50; background: var(--ground); pointer-events: none; opacity: 0; }
+  .from-home .arrive-cover { opacity: 1; }
+  .from-home.is-arrived .arrive-cover { opacity: 0; transition: opacity .7s cubic-bezier(.23, 1, .32, 1); }
+  .from-home .ov-head[data-reveal] { transition-delay: .25s; }
+  .from-home .ov-wt[data-reveal] { transition-delay: .45s; }
+</style>
+<script>
+  /* 홈에서 버튼으로 넘어온 경우: 맨 위에서 시작하고, 주소의 표시는 지움(새로고침 시 다시 재생하지 않음) */
+  (function () {
+    if (location.search.indexOf("from=home") > -1) {
+      document.documentElement.classList.add("from-home");
+      if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+      history.replaceState(null, "", location.pathname + location.hash);
+    }
+  })();
+</script>
+</head>
+<body>
+<div class="arrive-cover" aria-hidden="true"></div>
+
+<header class="site-header">
+  <a class="brand" href="home-v2.html">길어진 시간의 밀도</a>
+  <nav class="site-nav" aria-label="섹션">
+    <a href="#overview">개요</a>
+    <a href="#event-a" class="is-a">사건 A</a>
+    <a href="#event-b" class="is-b">사건 B</a>
+    <a href="#comparison">비교</a>
+    <a href="#connection">연결</a>
+    <a href="#insight">인사이트</a>
+  </nav>
+  <span class="site-meta">제주 · 7월 2일 · 두 번의 걷기</span>
+</header>
+
+<main>
+  <!-- ================= 개요 · Two Walks, One Frame (index.html 의 개요와 같은 내용) ================= -->
+  <section id="overview" class="ov" aria-labelledby="ov-q">
+
+    <!-- 01 · 길어진 시간은 무엇으로 채워졌을까? (두 경로) -->
+    <div class="ov-walks">
+      <header class="ov-head" data-reveal>
+        <span class="ov-num">01</span>
+        <h3 id="ov-q">길어진 시간은 무엇으로 채워졌을까?</h3>
+        <p>Two Walks, One Frame</p>
+      </header>
+      <div class="ov-walk-titles">
+        <div class="ov-wt ov-wt-a" data-reveal>
+          <p class="ov-wt-eyebrow">사건 A · 낮의 걷기</p>
+          <h4>예상하지 못한 우회</h4>
+          <p>계획이 어긋난 뒤, 새로운 장소와 풍경을 만난 걷기.</p>
+          <p class="ov-wt-time">약 60분 · 13:10 닫힌 카페에서 출발 · 14:10 새 카페</p>
+        </div>
+        <div class="ov-wt ov-wt-b" data-reveal>
+          <p class="ov-wt-eyebrow">사건 B · 저녁의 걷기</p>
+          <h4>과정에 머무른 이동</h4>
+          <p>사진과 대화를 나누며, 이동하는 시간 자체를 즐긴 걷기.</p>
+          <p class="ov-wt-time">계획 8분 → 실제 약 20분 · 19:00경 출발 · 19:20 식당 도착</p>
+        </div>
+      </div>
+      <div class="ov-explore">
+        <div class="ov-scroller">
+          <div class="ov-stage" id="ov-stage" role="group" aria-label="두 걷기의 장면 지도. 장면을 선택하면 기록이 고정됩니다."></div>
+        </div>
+        <aside class="ov-detail" id="ov-detail" aria-live="polite">
+          <p class="ov-d-hint"><span>장면 기록</span>경로 위의 장면이나 사진에 마우스를 올려 보세요. 누르면 그 장면의 기록이 이곳에 고정됩니다.</p>
+        </aside>
+      </div>
+    </div>
+
+    <!-- 02 · 정보를 바라보는 네 가지 기준 -->
+    <div class="ov-how">
+      <header class="ov-head" data-reveal>
+        <span class="ov-num">02</span>
+        <h3>정보를 바라보는 네 가지 기준</h3>
+        <p>How to explore · 기준을 골라 보세요</p>
+      </header>
+      <div class="ov-criteria" id="ov-criteria" role="group" aria-label="관찰 기준"></div>
+      <div class="ov-how-body">
+        <div class="ov-stage ov-stage--compact" id="ov-stage-compact" role="group" aria-label="기준에 따라 반응하는 장면 지도"></div>
+        <div class="ov-how-side">
+          <div class="ov-readout" id="ov-readout" aria-live="polite"></div>
+          <aside class="ov-detail ov-detail--inline" id="ov-detail-2" aria-live="polite"></aside>
+        </div>
+      </div>
+      <p class="ov-foot">다섯 번째 요소인 <b>기록 근거</b>는 장면을 선택했을 때 사진·회고·기록 출처로 함께 표시됩니다.</p>
+    </div>
+
+    <!-- 03 · 사건 탐색으로 -->
+    <div class="ov-next">
+      <span class="ov-num" data-reveal>03</span>
+      <h2 class="ov-q ov-q--end" data-reveal>같은 길어진 시간,<br><b>서로 다른 이야기.</b></h2>
+      <nav class="ov-links" aria-label="사건 탐색">
+        <a class="ov-link ov-link-a" href="#event-a" data-reveal>
+          <span class="ov-link-line" aria-hidden="true"></span>
+          <span class="ov-link-eyebrow">사건 A · 낮</span>
+          <span class="ov-link-text">예상하지 못한 우회 살펴보기</span>
+          <span class="ov-link-arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="ov-link ov-link-b" href="#event-b" data-reveal>
+          <span class="ov-link-line" aria-hidden="true"></span>
+          <span class="ov-link-eyebrow">사건 B · 저녁</span>
+          <span class="ov-link-text">과정에 머무른 이동 살펴보기</span>
+          <span class="ov-link-arrow" aria-hidden="true">→</span>
+        </a>
+      </nav>
+    </div>
+  </section>
+  <section id="event-a" class="stub stub-a" aria-labelledby="t-a">
+    <span class="stub-tag">다음 단계에서 제작합니다</span>
+    <h2 id="t-a">사건 A · 예상 밖의 반전형</h2>
+    <p>장소별 발견, 상호작용, 감정 변화를 유기적인 곡선 위에서 탐색하는 섹션입니다.</p>
+  </section>
+  <section id="event-b" class="stub stub-b" aria-labelledby="t-b">
+    <span class="stub-tag">다음 단계에서 제작합니다</span>
+    <h2 id="t-b">사건 B · 과정 몰입형</h2>
+    <p>계획 8분과 실제 약 20분 사이의 경험을 시간 확장형 타임라인으로 탐색하는 섹션입니다.</p>
+  </section>
+  <section id="comparison" class="stub" aria-labelledby="t-comp">
+    <span class="stub-tag">다음 단계에서 제작합니다</span>
+    <h2 id="t-comp">비교</h2>
+    <p>상호작용 총량과 10분당 밀도, 목적지 중심과 경험 중심의 관점 전환.</p>
+  </section>
+  <section id="connection" class="stub" aria-labelledby="t-conn">
+    <span class="stub-tag">다음 단계에서 제작합니다</span>
+    <h2 id="t-conn">연결</h2>
+    <p>상호작용 유형과 감정, 관계에 대한 회고.</p>
+  </section>
+  <section id="insight" class="stub" aria-labelledby="t-ins">
+    <span class="stub-tag">다음 단계에서 제작합니다</span>
+    <h2 id="t-ins">인사이트</h2>
+    <p>두 걷기에서 관찰된 패턴과 최종 메시지.</p>
+  </section>
+</main>
+
+<script src="js/data.js"></script>
+<script src="js/overview.js"></script>
+<script>
+  /* 도착: 맨 위에서 시작 → 바닥색 막이 걷힘 → 제목·경로·사진이 차례로 (overview.js 의 등장 효과) */
+  (function () {
+    const root = document.documentElement;
+    if (!root.classList.contains("from-home")) return;
+    window.scrollTo(0, 0);
+    requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add("is-arrived")));
+    /* 막은 입력을 가리지 않으며(pointer-events:none), 끝나면 문서에서 제거 */
+    setTimeout(() => { const c = document.querySelector(".arrive-cover"); if (c) c.remove(); }, 1200);
+  })();
+</script>
+</body>
+</html>

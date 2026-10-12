@@ -31,7 +31,7 @@ window.SITE_DATA = {
     A: {
       name: "예상 밖의 반전형",
       title: "예상하지 못한 걷기",
-      start: null,          startNote: "출발 시각 미확인",
+      start: "13:10",       startNote: "사용자 제공 · 닫힌 카페에서 출발",
       firstRecord: "13:16", lastRecord: "14:10",
       lastRecordNote: "14:10은 새 카페 사진 시각 (도착 시각 아님)"
     },
@@ -45,63 +45,65 @@ window.SITE_DATA = {
     }
   },
 
+  /* emotion.score: 감정의 방향·강도 (−2~+2, 사용자 회고 값). 부호 = 방향(− 부정 / 0 / + 긍정), 크기 = 강도.
+     P: 공간적 예상 밖 / I: 상호작용적 예상 밖 — 사용자가 장면(장소) 단위로 지정. 해당하지 않으면 생략.
+     role: 장면의 역할에 대한 사용자 설명 */
   scenes: [
-    { id: "A-0", event: "A", order: 0, place: "출발 · 닫힌 카페",  time: null,   timeBasis: "미확인",
-      segment: "walk",  emotion: { kind: "confuse", kindStatus: "포스터 기준 · 확인 필요", score: null },
-      P: null, quote: "설마 오늘 문 닫은 거야?" },
+    { id: "A-0", event: "A", order: 0, place: "출발 · 닫힌 카페",  time: "13:10", timeBasis: "사용자 제공 · 출발 시각",
+      segment: "walk",  emotion: { kind: "confuse", kindStatus: "", score: -2 },
+      P: true, role: "걷기 시작한 계기", quote: "그럼 좀 더 걸어 볼까?" },
     { id: "A-1", event: "A", order: 1, place: "기념품샵",          time: "13:16", timeBasis: "사진 시각",
-      segment: "walk",  emotion: { kind: "calm",    kindStatus: "포스터 기준 · 확인 필요", score: null },
-      P: null, quote: "기념품샵 구경은 한 번 해야지!" },
+      segment: "walk",  emotion: { kind: "calm",    kindStatus: "", score: 0 },
+      P: true, I: true, quote: "기념품샵 구경은 한 번 해야지!" },
     { id: "A-2", event: "A", order: 2, place: "바다",              time: "13:23", timeBasis: "사진 시각",
-      segment: "walk",  emotion: { kind: "joy",     kindStatus: "포스터 기준 · 확인 필요", score: null },
-      P: null, quote: "와 제주도 오고 바다를 제대로 처음 봐!" },
+      segment: "walk",  emotion: { kind: "joy",     kindStatus: "", score: 2 },
+      P: true, I: true, quote: "와 제주도 오고 바다를 제대로 처음 봐!" },
     { id: "A-3", event: "A", order: 3, place: "선글라스 매장",     time: "13:49", timeBasis: "사진 시각",
-      segment: "walk",  emotion: { kind: "joy",     kindStatus: "포스터 기준(즐거움~만족 경계) · 확인 필요", score: null },
-      P: null, quote: "이거 잘 어울려?" },
+      segment: "walk",  emotion: { kind: "joy",     kindStatus: "", score: 1 },
+      P: true, I: true, quote: "이거 잘 어울려?" },
     { id: "A-4", event: "A", order: 4, place: "새로운 카페",       time: "14:10", timeBasis: "사진 시각 · 도착 시각 아님",
-      segment: "after", emotion: { kind: "content", kindStatus: "포스터 기준 · 확인 필요", score: null },
-      P: null, quote: "여긴 원래 가려던 카페보다 전망이 좋다!" },
+      segment: "after", emotion: { kind: "content", kindStatus: "", score: 2 },
+      P: true, quote: "여긴 원래 가려던 카페보다 전망이 좋다!" },
 
     { id: "B-0", event: "B", order: 0, place: "출발 · 걸어가자는 결정", time: "19:00", timeBasis: "사용자 제공 · 19:00경",
-      segment: "walk",    emotion: { kind: "calm",    kindStatus: "포스터 기준 · 확인 필요", score: null },
-      P: null, quote: "식당이 가까우니까 걸어서 가자" },
+      segment: "walk",    emotion: { kind: "calm",    kindStatus: "", score: 1 },
+      quote: "식당이 가까우니까 걸어서 가자" },
     { id: "B-1", event: "B", order: 1, place: "돌담길 · 이동 중",   time: null, timeRange: ["19:00", "19:20"], timeBasis: "사진별 시각 없음 · 순서 기준",
-      segment: "walk",    emotion: { kind: "content", kindStatus: "포스터 기준 · 확인 필요", score: null },
-      P: null, quote: "와, 이런 길 보니까 제주도 온 느낌 난다." },
-    { id: "B-2", event: "B", order: 2, place: "식당 도착 순간",     time: "19:20", timeBasis: "사용자 제공",
-      segment: "pending", emotion: { kind: "joy",     kindStatus: "포스터 기준 · 확인 필요", score: null },
-      P: null, quote: "배고프긴 한데, 벌써 도착한 게 조금 아쉽다!" },
-    { id: "B-3", event: "B", order: 3, place: "식당 안",            time: null, timeBasis: "19:20 이후",
-      segment: "after",   emotion: { kind: null, kindStatus: "기록 없음", score: null },
-      P: null, quote: null }
+      segment: "walk",    emotion: { kind: "content", kindStatus: "", score: 2 },
+      I: true, quote: "와, 이런 길 보니까 제주도 온 느낌 난다." },
+    /* 식당 도착 순간과 식당 안을 하나의 장면으로 합침, 구간은 '도착 후'로 확정 (사용자 결정) */
+    { id: "B-2", event: "B", order: 2, place: "식당 도착",          time: "19:20", timeBasis: "사용자 제공",
+      segment: "after", emotion: { kind: "joy",     kindStatus: "", score: 1 },
+      quote: "배고팠긴 한데, 벌써 도착한 게 조금 아쉽다!" }
   ],
 
   /* kind: interaction = 상호작용(집계 대상) / personal = 개인 경험(집계 제외)
-     status: 미검토 / 확정 / 제외  — 화면에서는 '확정'만 채움 기호로 표시합니다. */
+     status: 미검토 / 확정 / 제외  — 사용자 검토 완료로 모두 '확정' */
   interactions: [
-    { id: "A0-1", scene: "A-0", type: null,        kind: "interaction", text: "카페가 닫힌 것을 확인하며 나눈 대화", quote: "설마 오늘 문 닫은 거야?", I: null, status: "미검토" },
-    { id: "A0-2", scene: "A-0", type: "move",      kind: "interaction", text: "계속 걸어 보자는 제안",            quote: "그럼 좀 더 걸어 볼까?",   I: null, status: "미검토" },
-    { id: "A1-1", scene: "A-1", type: "situation", kind: "interaction", text: "새로운 장소 발견",                   quote: null, I: null, status: "미검토" },
-    { id: "A1-2", scene: "A-1", type: "together",  kind: "interaction", text: "기념품 함께 구경",                   quote: null, I: null, status: "미검토" },
-    { id: "A1-3", scene: "A-1", type: "share",     kind: "interaction", text: "마음에 드는 물건 공유",              quote: null, I: null, status: "미검토" },
-    { id: "A2-1", scene: "A-2", type: "situation", kind: "interaction", text: "바다를 발견하고 감탄",               quote: "와 제주도 오고 바다를 제대로 처음 봐!", I: null, status: "미검토" },
-    { id: "A2-2", scene: "A-2", type: "together",  kind: "interaction", text: "바다 앞에서 함께 사진 촬영",          quote: null, I: null, status: "미검토" },
-    { id: "A2-3", scene: "A-2", type: "share",     kind: "interaction", text: "예상치 못한 풍경에 대한 기쁨 공유",   quote: null, I: null, status: "미검토" },
-    { id: "A3-1", scene: "A-3", type: "situation", kind: "interaction", text: "대형 고양이 인형을 보고 궁금해져서 입장", quote: null, I: null, status: "미검토" },
-    { id: "A3-2", scene: "A-3", type: "together",  kind: "interaction", text: "선글라스를 써 보며 함께 구경",        quote: null, I: null, status: "미검토" },
-    { id: "A3-3", scene: "A-3", type: "share",     kind: "interaction", text: "어울림에 대한 반응 공유",            quote: "이거 잘 어울려?", I: null, status: "미검토" },
-    { id: "A3-4", scene: "A-3", type: "move",      kind: "interaction", text: "새 카페로 가자는 제안",              quote: "여기로 가자", I: null, status: "미검토" },
-    { id: "A4-1", scene: "A-4", type: "together",  kind: "interaction", text: "음료를 마시며 쉼",                  quote: null, I: null, status: "미검토" },
-    { id: "A4-2", scene: "A-4", type: "share",     kind: "interaction", text: "만족감 공유",                       quote: "여기 오길 잘했다", I: null, status: "미검토" },
+    { id: "A0-1", scene: "A-0", type: null,        kind: "interaction", text: "카페가 닫힌 것을 확인하며 나눈 대화", quote: "설마 오늘 문 닫은 거야?", I: null, status: "확정" },
+    { id: "A0-2", scene: "A-0", type: "move",      kind: "interaction", text: "계속 걸어 보자는 제안",            quote: "그럼 좀 더 걸어 볼까?",   I: null, status: "확정" },
+    { id: "A1-1", scene: "A-1", type: "situation", kind: "interaction", text: "새로운 장소 발견",                   quote: null, I: null, status: "확정" },
+    { id: "A1-2", scene: "A-1", type: "together",  kind: "interaction", text: "기념품 함께 구경",                   quote: null, I: null, status: "확정" },
+    { id: "A1-3", scene: "A-1", type: "share",     kind: "interaction", text: "마음에 드는 물건 공유",              quote: null, I: null, status: "확정" },
+    { id: "A2-1", scene: "A-2", type: "situation", kind: "interaction", text: "바다를 발견하고 감탄",               quote: "와 제주도 오고 바다를 제대로 처음 봐!", I: null, status: "확정" },
+    { id: "A2-2", scene: "A-2", type: "together",  kind: "interaction", text: "바다 앞에서 함께 사진 촬영",          quote: null, I: null, status: "확정" },
+    { id: "A2-3", scene: "A-2", type: "share",     kind: "interaction", text: "예상치 못한 풍경에 대한 기쁨 공유",   quote: null, I: null, status: "확정" },
+    { id: "A3-1", scene: "A-3", type: "situation", kind: "interaction", text: "대형 고양이 인형을 보고 궁금해져서 입장", quote: null, I: null, status: "확정" },
+    { id: "A3-2", scene: "A-3", type: "together",  kind: "interaction", text: "선글라스를 써 보며 함께 구경",        quote: null, I: null, status: "확정" },
+    { id: "A3-3", scene: "A-3", type: "share",     kind: "interaction", text: "어울림에 대한 반응 공유",            quote: "이거 잘 어울려?", I: null, status: "확정" },
+    { id: "A3-4", scene: "A-3", type: "move",      kind: "interaction", text: "새 카페로 가자는 제안",              quote: "여기로 가자", I: null, status: "확정" },
+    { id: "A4-1", scene: "A-4", type: "together",  kind: "interaction", text: "음료를 마시며 쉼",                  quote: null, I: null, status: "확정" },
+    { id: "A4-2", scene: "A-4", type: "share",     kind: "interaction", text: "만족감 공유",                       quote: "여기 오길 잘했다", I: null, status: "확정" },
 
-    { id: "B0-1", scene: "B-0", type: "move",      kind: "interaction", text: "식당까지 걸어가자는 제안",           quote: "식당이 가까우니까 걸어서 가자", I: null, status: "미검토" },
-    { id: "B1-1", scene: "B-1", type: "situation", kind: "interaction", text: "제주도스러운 돌담길 발견·감탄",       quote: "와, 이런 길 보니까 제주도 온 느낌 난다.", I: null, status: "미검토" },
-    { id: "B1-2", scene: "B-1", type: "together",  kind: "interaction", text: "함께 돌담길을 걸으며 구경, 사진 촬영", quote: null, I: null, status: "미검토" },
-    { id: "B1-3", scene: "B-1", type: "share",     kind: "interaction", text: "제주에 온 느낌 공유",                quote: null, I: null, status: "미검토" },
-    { id: "B1-4", scene: "B-1", type: null,        kind: "personal",    text: "음악 감상",                         quote: null, I: null, status: "미검토" },
-    { id: "B1-5", scene: "B-1", type: null,        kind: "personal",    text: "노을 감상",                         quote: null, I: null, status: "미검토" },
-    { id: "B2-1", scene: "B-2", type: "share",     kind: "interaction", text: "걷기가 끝나는 아쉬움 공유",           quote: "배고프긴 한데, 벌써 도착한 게 조금 아쉽다!", I: null, status: "미검토" },
-    { id: "B3-1", scene: "B-3", type: "together",  kind: "interaction", text: "함께 식사하기",                     quote: null, I: null, status: "미검토" }
+    { id: "B0-1", scene: "B-0", type: "move",      kind: "interaction", text: "식당까지 걸어가자는 제안",           quote: "식당이 가까우니까 걸어서 가자", I: null, status: "확정" },
+    { id: "B1-1", scene: "B-1", type: "situation", kind: "interaction", text: "제주도스러운 돌담길 발견·감탄",       quote: "와, 이런 길 보니까 제주도 온 느낌 난다.", I: null, status: "확정" },
+    { id: "B1-2", scene: "B-1", type: "together",  kind: "interaction", text: "함께 돌담길을 걸으며 구경, 사진 촬영", quote: null, I: null, status: "확정" },
+    { id: "B1-3", scene: "B-1", type: "share",     kind: "interaction", text: "제주에 온 느낌 공유",                quote: null, I: null, status: "확정" },
+    /* 음악·노을 감상: 사용자 확인으로 개인 경험이 아닌 함께한 경험 (유형은 공동 행동으로 둠) */
+    { id: "B1-4", scene: "B-1", type: "together",  kind: "interaction", text: "음악 감상",                         quote: null, I: null, status: "확정" },
+    { id: "B1-5", scene: "B-1", type: "together",  kind: "interaction", text: "노을 감상",                         quote: null, I: null, status: "확정" },
+    { id: "B2-1", scene: "B-2", type: "share",     kind: "interaction", text: "걷기가 끝나는 아쉬움 공유",           quote: "배고팠긴 한데, 벌써 도착한 게 조금 아쉽다!", I: null, status: "확정" },
+    { id: "B2-2", scene: "B-2", type: "together",  kind: "interaction", text: "함께 식사하기",                     quote: null, I: null, status: "확정" }
   ],
 
   /* 사진: time 은 사진 시각. order 만 있는 사진은 순서 기준으로 배치합니다. */
@@ -123,7 +125,7 @@ window.SITE_DATA = {
     { id: "b-walk-4", event: "B", scene: "B-1", file: "assets/photos/b-walk-4.jpg", order: 4, alt: "골목을 함께 걷는 다섯 명의 뒷모습" },
     { id: "b-walk-5", event: "B", scene: "B-1", file: "assets/photos/b-walk-5.jpg", order: 5, alt: "돌담 사이 길을 걷는 세 사람" },
     { id: "b-walk-6", event: "B", scene: "B-1", file: "assets/photos/b-walk-6.jpg", order: 6, alt: "돌담 옆에서 같은 포즈를 한 세 사람" },
-    { id: "b-restaurant", event: "B", scene: "B-3", file: "assets/photos/b-restaurant.jpg", time: "19:20", alt: "식당 테이블 위 고기와 반찬" }
+    { id: "b-restaurant", event: "B", scene: "B-2", file: "assets/photos/b-restaurant.jpg", time: "19:20", alt: "식당 테이블 위 고기와 반찬" }
   ]
 };
 

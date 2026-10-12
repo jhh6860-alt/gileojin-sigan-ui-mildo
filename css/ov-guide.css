@@ -1,0 +1,84 @@
+/* ==========================================================================
+   개요 02 · 정보를 바라보는 네 가지 기준 — 기준 안내 (citrus3-overview.html 전용)
+   · 장면 상세·사진·시간·발화·점수는 위 섹션(두 걷기 탐색)에서만 보여 주고,
+     여기서는 네 기준의 '의미'만 짧은 글과 추상 그래픽으로 안내합니다.
+   · 색은 기존 토큰(--a, --b, --emo-*, --ink, --rule)만 사용
+   ========================================================================== */
+.ov-guide { padding-top: 40px; padding-bottom: clamp(96px, 14vh, 160px); }
+
+.og { display: grid; grid-template-columns: minmax(220px, 4fr) minmax(0, 8fr); gap: clamp(24px, 4vw, 64px); align-items: stretch; }
+
+/* 기준 탭: 번호 · 영문 · 한글 */
+.og-tabs { display: flex; flex-direction: column; border-top: 1px solid var(--rule); }
+.og-tabs button {
+  position: relative; display: grid; grid-template-columns: 36px 1fr auto; align-items: baseline; gap: 10px;
+  padding: 20px 4px 20px 0; border: 0; border-bottom: 1px solid var(--rule); background: none; color: var(--mute);
+  font: inherit; text-align: left; cursor: pointer;
+  transition: color .35s var(--ease);
+}
+.og-tabs button::after {
+  content: ""; position: absolute; left: 0; bottom: -1px; height: 1.5px; width: 0; background: var(--ink);
+  transition: width .6s var(--ease);
+}
+.og-no, .og-en { font-family: var(--f-data); font-size: 11px; letter-spacing: .04em; }
+.og-ko { grid-column: 3; font-family: var(--f-display); font-size: clamp(22px, 2.2vw, 30px); font-weight: 600; letter-spacing: -.02em; line-height: 1; }
+.og-tabs button:hover { color: var(--ink); }
+.og-tabs button[aria-selected="true"] { color: var(--ink); }
+.og-tabs button[aria-selected="true"]::after { width: 100%; }
+.og-tabs button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* 패널: 그래픽 + 짧은 설명 */
+.og-panel {
+  display: grid; grid-template-rows: auto auto; gap: 20px; min-width: 0;
+  padding: clamp(20px, 2.6vw, 36px); border-radius: 16px;
+  background: rgba(255, 255, 255, .55); border: 1px solid var(--rule);
+}
+.og-fig { display: block; width: 100%; max-width: 640px; height: auto; overflow: visible; }
+.og-text { display: flex; flex-direction: column; gap: 10px; max-width: 34em; }
+.og-q { margin: 0; font-family: var(--f-display); font-size: clamp(22px, 2.2vw, 30px); font-weight: 600; letter-spacing: -.02em; line-height: 1.25; }
+.og-desc { margin: 0; font-size: 15px; line-height: 1.65; color: var(--ink); }
+.og-look { margin: 4px 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-family: var(--f-data); font-size: 11px; letter-spacing: .03em; color: var(--mute); }
+.og-look .ov-tag { margin: 0; }
+.og-text > * { transition: opacity .35s var(--ease), transform .35s var(--ease); }
+.og-panel.is-swap .og-text > * { opacity: 0; transform: translateY(6px); }
+
+/* 그래픽 요소 */
+.og-g { opacity: 0; visibility: hidden; transition: opacity .35s var(--ease), visibility 0s linear .35s; }
+.og-panel[data-k="time"] [data-g="time"],
+.og-panel[data-k="discovery"] [data-g="discovery"],
+.og-panel[data-k="action"] [data-g="action"],
+.og-panel[data-k="emotion"] [data-g="emotion"] { opacity: 1; visibility: visible; transition: opacity .35s var(--ease), visibility 0s; }
+.og-t { font-family: var(--f-data); font-size: 11px; letter-spacing: .03em; fill: var(--mute); }
+.og-axis { stroke: var(--rule); stroke-width: 1; }
+.og-zero { stroke: rgba(23, 22, 26, .3); stroke-dasharray: 2 4; }
+.og-plan { fill: none; stroke: rgba(23, 22, 26, .35); stroke-width: 2; stroke-dasharray: 3 6; stroke-linecap: round; }
+.og-plan-mark { stroke: rgba(23, 22, 26, .3); stroke-width: 1; stroke-dasharray: 2 4; }
+.og-ring-plan { fill: var(--ground); stroke: rgba(23, 22, 26, .4); stroke-width: 1.5; stroke-dasharray: 2 3; }
+.og-draw { fill: none; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.og-a { stroke: var(--a); }
+.og-b { stroke: var(--b); }
+.og-ink { stroke: var(--ink); stroke-width: 2.5; }
+.og-fill-a { fill: var(--a); }
+.og-fill-b { fill: var(--b); }
+.og-spark { fill: none; stroke: var(--a); stroke-width: 1.5; }
+.og-chip { fill: rgba(32, 194, 74, .16); stroke: var(--b-text); stroke-width: 1; }
+.og-emo { fill: var(--emo); stroke: var(--ground); stroke-width: 2; stroke-linejoin: round; }
+.og-pop { opacity: 0; transform-box: fill-box; transform-origin: center; }
+
+/* 선택된 기준: 선이 그려지고 표식이 차례로 나타남 */
+.og-g.is-play .og-draw { animation: ogDraw 1s var(--ease) var(--d, 0s) forwards; }
+.og-g.is-play .og-pop { animation: ogPop .5s var(--ease) var(--d, 0s) forwards; }
+@keyframes ogDraw { to { stroke-dashoffset: 0; } }
+@keyframes ogPop { from { opacity: 0; transform: scale(.4); } to { opacity: 1; transform: scale(1); } }
+
+@media (max-width: 760px) {
+  .og { grid-template-columns: minmax(0, 1fr); }
+  .og-tabs { display: grid; grid-template-columns: 1fr 1fr; border-top: 0; gap: 0 16px; }
+  .og-tabs button { grid-template-columns: 28px 1fr; padding: 14px 0; }
+  .og-en { display: none; }
+  .og-ko { grid-column: 2; font-size: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .og-g.is-play .og-draw, .og-g.is-play .og-pop { animation: none; stroke-dashoffset: 0; opacity: 1; }
+  .og-tabs button::after, .og-text > * { transition: none; }
+}

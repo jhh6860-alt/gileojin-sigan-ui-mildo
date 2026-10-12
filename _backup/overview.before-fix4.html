@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>개요 — 길어진 시간의 밀도</title>
+<meta name="description" content="두 번의 걷기를 하나의 프레임으로 — 길어진 시간은 무엇으로 채워졌을까?">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..700&family=Space+Grotesk:wght@500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/overview.css">
+<style>
+  body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+  /* 홈의 '두 번의 걷기 펼쳐보기' 전환에서 이어질 때: 바닥색 막이 걷히며 개요가 나타남 */
+  .arrive-cover { position: fixed; inset: 0; z-index: 50; background: var(--ground); pointer-events: none; opacity: 0; }
+  .from-home .arrive-cover { opacity: 1; }
+  .from-home.is-arrived .arrive-cover { opacity: 0; transition: opacity .7s cubic-bezier(.23, 1, .32, 1); }
+  /* 홈에서 왔을 때: 첫 화면의 제목과 두 사건 소개가 막이 걷히는 순간 바로 보이도록 (스크롤 감지를 기다리지 않음) */
+  .from-home .ov-walks .ov-head[data-reveal], .from-home .ov-walks .ov-wt[data-reveal] { opacity: 1; transform: none; }
+  .from-home .ov-walks .ov-head[data-reveal] { transition-delay: .15s; }
+  .from-home .ov-walks .ov-wt[data-reveal] { transition-delay: .3s; }
+  /* 번호 없는 섹션 제목: 번호 자리(콘텐츠 왼쪽 여백선)에서 제목이 시작 */
+  .ov-head--plain { grid-template-columns: minmax(0, 1fr) auto; }
+  .ov-head--plain h3 { font-weight: 700; }   /* 아래 사건 제목(600)보다 조금 더 두껍게 */
+  @media (max-width: 760px) {
+    .ov-head--plain { grid-template-columns: minmax(0, 1fr); }
+    .ov-head--plain p { grid-column: 1; }
+  }
+  /* 다음 챕터(비교)로 가는 전체 너비 이동 영역 — 영역 전체가 하나의 링크 */
+  .ov-nextnav {
+    display: block; color: var(--ink); text-decoration: none;
+    border-top: 1px solid var(--rule); background: var(--ground);
+    transition: background-color .5s var(--ease);
+  }
+  .ov-nextnav-in {
+    max-width: var(--max, 1360px); margin: 0 auto; box-sizing: content-box;
+    padding: clamp(56px, 11vh, 120px) var(--gut, clamp(20px, 5vw, 72px));
+    display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 18px 32px;
+  }
+  .ov-nextnav-title {
+    font-family: var(--f-display); font-weight: 600; letter-spacing: -.045em; line-height: .95;
+    font-size: clamp(56px, 9.5vw, 148px);
+  }
+  .ov-nextnav-arrow {
+    font-family: var(--f-display); font-weight: 400; line-height: 1;
+    font-size: clamp(44px, 7vw, 108px);
+    transition: transform .7s var(--ease);
+  }
+  .ov-nextnav-desc { grid-column: 1 / -1; font-size: clamp(15px, 1.3vw, 18px); line-height: 1.5; color: var(--mute); }
+  .ov-nextnav:hover, .ov-nextnav:focus-visible { background: var(--surface-sunken); }
+  .ov-nextnav:hover .ov-nextnav-arrow, .ov-nextnav:focus-visible .ov-nextnav-arrow { transform: translate(8px, -8px); }
+  .ov-nextnav:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
+  @media (max-width: 760px) {
+    .ov-nextnav-in { gap: 12px 16px; align-items: center; }
+    .ov-nextnav-title { font-size: clamp(44px, 13vw, 64px); }
+    .ov-nextnav-arrow { font-size: clamp(36px, 10vw, 52px); }
+  }
+</style>
+<script>
+  /* 개요는 항상 첫 화면(맨 위)에서 시작합니다. 단, 주소에 #위치가 있으면 그 위치로.
+     홈 버튼으로 넘어온 경우(주소의 ?from=home 또는 sessionStorage 표시)에는 도착 효과도 보여 줌 */
+  (function () {
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    let fromHome = location.search.indexOf("from=home") > -1;
+    try { if (sessionStorage.getItem("fromHome") === "1") { fromHome = true; sessionStorage.removeItem("fromHome"); } } catch (e) { /* 저장소 없음 */ }
+    if (fromHome) {
+      document.documentElement.classList.add("from-home");
+      if (location.search) { try { history.replaceState(null, "", location.pathname + location.hash); } catch (e) { /* 무시 */ } }
+    }
+  })();
+</script>
+</head>
+<body>
+<div class="arrive-cover" aria-hidden="true"></div>
+
+<header class="site-header">
+  <a class="brand" href="home-v2.html">길어진 시간의 밀도</a>
+  <nav class="site-nav" aria-label="페이지">
+    <a href="index.html">홈</a>
+    <a href="overview.html" aria-current="page">개요</a>
+    <a href="comparison.html">비교</a>
+    <span class="is-soon" aria-disabled="true" title="준비 중">인사이트</span>
+  </nav>
+  <span class="site-meta">제주 · 7월 2일 · 두 번의 걷기</span>
+</header>
+
+<main>
+  <!-- ================= 개요 · Two Walks, One Frame (index.html 의 개요와 같은 내용) ================= -->
+  <section id="overview" class="ov" aria-labelledby="ov-q">
+
+    <!-- 01 · 길어진 시간은 무엇으로 채워졌을까? (두 경로) -->
+    <div class="ov-walks">
+      <header class="ov-head ov-head--plain" data-reveal>
+        <h3 id="ov-q">길어진 시간은 무엇으로 채워졌을까?</h3>
+        <p>Two Walks, One Frame</p>
+      </header>
+      <div class="ov-walk-titles">
+        <div class="ov-wt ov-wt-a" data-reveal>
+          <p class="ov-wt-eyebrow">사건 A · 낮의 걷기</p>
+          <h4>예상하지 못한 우회</h4>
+          <p class="ov-wt-time">약 60분 · 13:10 닫힌 카페에서 출발 · 14:10 새 카페</p>
+        </div>
+        <div class="ov-wt ov-wt-b" data-reveal>
+          <p class="ov-wt-eyebrow">사건 B · 저녁의 걷기</p>
+          <h4>과정에 머무른 이동</h4>
+          <p class="ov-wt-time">계획 8분 → 실제 약 20분 · 19:00경 출발 · 19:20 식당 도착</p>
+        </div>
+      </div>
+      <div class="ov-explore">
+        <div class="ov-scroller">
+          <div class="ov-stage" id="ov-stage" role="group" aria-label="두 걷기의 장면 지도. 장면을 선택하면 기록이 고정됩니다."></div>
+        </div>
+        <aside class="ov-detail" id="ov-detail" aria-live="polite">
+          <p class="ov-d-hint"><span>장면 기록</span>경로 위의 장면이나 사진에 마우스를 올려 보세요. 누르면 그 장면의 기록이 이곳에 고정됩니다.</p>
+        </aside>
+      </div>
+    </div>
+
+    <!-- 02 · 정보를 바라보는 네 가지 기준 -->
+    <div class="ov-how">
+      <header class="ov-head ov-head--plain" data-reveal>
+        <h3>정보를 바라보는 네 가지 기준</h3>
+        <p>How to explore · 기준을 골라 보세요</p>
+      </header>
+      <div class="ov-criteria" id="ov-criteria" role="group" aria-label="관찰 기준"></div>
+      <div class="ov-how-body">
+        <div class="ov-stage ov-stage--compact" id="ov-stage-compact" role="group" aria-label="기준에 따라 반응하는 장면 지도"></div>
+        <div class="ov-how-side">
+          <div class="ov-readout" id="ov-readout" aria-live="polite"></div>
+          <!-- 하단 장면 상세(사진·발화·분석·감정·기록 근거)는 위 섹션과 중복되어 제거 — 복구: _backup/overview.before-remove-detail2.html -->
+        </div>
+      </div>
+      <p class="ov-foot">다섯 번째 요소인 <b>기록 근거</b>는 장면을 선택했을 때 사진·회고·기록 출처로 함께 표시됩니다.</p>
+    </div>
+
+    <!-- 다음 챕터: 비교 (영역 전체를 누르면 이동 · 추후 전환 효과를 붙일 수 있게 data-transition 표시) -->
+    <a class="ov-nextnav" href="comparison.html" data-transition="compare" aria-label="차이 읽기 — 두 번의 걷기에서 발견한 서로 다른 경험의 방식 (비교 페이지로 이동)">
+      <span class="ov-nextnav-in">
+        <span class="ov-nextnav-title">차이 읽기</span>
+        <span class="ov-nextnav-arrow" aria-hidden="true">↗</span>
+        <span class="ov-nextnav-desc">두 번의 걷기에서 발견한 서로 다른 경험의 방식</span>
+      </span>
+    </a>
+  </section>
+</main>
+
+<script src="js/data.js"></script>
+<script src="js/overview.js"></script>
+<script>
+  /* 도착: 맨 위에서 시작 → 바닥색 막이 걷힘 → 제목·경로·사진이 차례로 (overview.js 의 등장 효과) */
+  (function () {
+    const root = document.documentElement;
+    const toTop = () => { if (!location.hash) window.scrollTo(0, 0); };
+    toTop();
+    if (!root.classList.contains("from-home")) return;
+    /* 홈에서 왔을 때: '길어진 시간은 무엇으로 채워졌을까?' 첫 화면에 확실히 머물도록
+       (글꼴·사진이 늦게 불러와져 높이가 바뀌거나 브라우저가 위치를 되살리는 경우까지) */
+    let userMoved = false;
+    const stop = () => { userMoved = true; };
+    ["wheel", "touchstart", "keydown"].forEach(t => window.addEventListener(t, stop, { once: true, passive: true }));
+    const keep = () => { if (!userMoved) toTop(); };
+    window.addEventListener("load", keep);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(keep);
+    [80, 300, 700].forEach(ms => setTimeout(keep, ms));
+    requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add("is-arrived")));
+    /* 막은 입력을 가리지 않으며(pointer-events:none), 끝나면 문서에서 제거 */
+    setTimeout(() => { const c = document.querySelector(".arrive-cover"); if (c) c.remove(); }, 1200);
+  })();
+</script>
+</body>
+</html>

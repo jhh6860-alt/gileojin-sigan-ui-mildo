@@ -1,0 +1,200 @@
+/* ==========================================================================
+   Citrus Graphic Edition v3 — 디테일 개선 실험 시안 (v2 에서 복사, 원본·v1·v2 는 그대로)
+   · citrus3*.html 에서만 불러옵니다. 지우면 v3 시안만 사라집니다.
+   · v2 대비: 더 '녹색'다운 B 그린, 선명한 감정 4색, 얇은 사진 테두리, 반투명 흰 장면 팝업,
+     직립 실루엣, 정돈된 홈 CTA (개요의 '차이 읽기' 영역은 citrus3-overview.html 안의 스타일)
+   ========================================================================== */
+:root {
+  /* 바탕·글자 */
+  --ground: #FFFBF4;            /* 아주 옅은 크림 */
+  --surface-sunken: #F7EEE1;
+  --surface-glass: rgba(255, 251, 244, 0.86);
+  --ink: #17161A;
+  --mute: #6A645E;
+  --body2: #6A645E;
+  --rule: rgba(23, 22, 26, 0.12);
+  --mat: #FFFDF9;
+  --walker-shadow: #EADCC8;
+
+  /* 두 사건 — A 오렌지 / B 그린 (선·점·면은 --a/--b, 작은 글자는 --a-text/--b-text) */
+  --a: #FF7A1A;                 /* 시트러스 오렌지 */
+  --b: #20C24A;                 /* v3: 연두기를 줄인 또렷한 녹색 */
+  --a-text: #B84A00;            /* 크림 바탕 작은 글자 4.5:1 이상 */
+  --b-text: #137A2E;            /* 크림 바탕 작은 글자 4.5:1 이상 */
+
+  /* 오렌지 그래픽 보조 톤 (배경·과즙 효과 전용 — 사건 색으로 쓰지 않음) */
+  --c-yellow: #FFB43C;
+  --c-apricot: #FF9E6B;
+  --c-red: #FF5A36;
+  --c-leaf: #8E9970;            /* 잎: B 그린과 헷갈리지 않게 채도를 낮춘 올리브 그레이 */
+  --c-leaf-2: #B3BB97;
+  /* 껍질 선: 사건마다 한 가지 색만 */
+  --peel-a: #FF7A1A;
+  --peel-b: #20C24A;
+  --peel-edge-a: #E8650A;
+  --peel-edge-b: #18A63D;
+
+  /* 얇은 사진 테두리·그림자 */
+  --ph-line: rgba(23, 22, 26, 0.09);
+  --ph-shadow: 0 10px 24px -14px rgba(90, 45, 0, 0.32), 0 1px 3px rgba(23, 22, 26, 0.07);
+}
+/* 감정 4색 (v3): 더 선명하게, 사건 A 오렌지·B 녹색과 겹치지 않는 색상 영역으로
+   당황 = 보라 · 안정 = 청록 · 즐거움 = 옐로 골드 · 만족 = 코랄 핑크 (데이터·의미는 그대로) */
+.ov, .cp {
+  --emo-1: #8A5CF6;
+  --emo-2: #0FA3A3;
+  --emo-3: #F2B300;
+  --emo-4: #FF5C8A;
+}
+
+body { background: var(--ground); }
+main { position: relative; z-index: 1; }
+.site-header { background: linear-gradient(var(--ground) 55%, rgba(255, 251, 244, 0)); }
+
+/* ---------- 원본과 비교하는 스위치 ---------- */
+.citrus-switch {
+  justify-self: end; pointer-events: auto;
+  display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 12px 0 10px;
+  border: 1px solid var(--rule); border-radius: var(--r-pill); background: var(--surface-glass);
+  font-family: var(--f-data); font-size: 11px; letter-spacing: .02em; color: var(--ink); white-space: nowrap;
+  transition: background-color .3s var(--ease), border-color .3s var(--ease);
+}
+.citrus-switch i { width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle at 40% 40%, var(--c-yellow), var(--a) 70%); }
+.citrus-switch:hover { background: var(--surface-sunken); border-color: var(--mute); }
+
+/* ---------- 배경: 흐릿한 오렌지 블롭 + 평면 잎 (아주 옅게) ---------- */
+.citrus-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.cb { position: absolute; border-radius: 50%; filter: blur(26px); opacity: .4; will-change: transform; animation: citrusDrift 22s ease-in-out infinite alternate; }
+.cb-1 { width: 46vmax; height: 46vmax; right: -14vmax; top: -16vmax;
+  background: radial-gradient(circle at 42% 44%, var(--a) 0%, var(--c-yellow) 34%, rgba(255, 180, 60, 0) 68%); }
+.cb-2 { width: 30vmax; height: 26vmax; left: -10vmax; bottom: -10vmax; opacity: .32; animation-duration: 28s;
+  background: radial-gradient(circle at 55% 45%, var(--c-red) 0%, var(--c-apricot) 36%, rgba(255, 158, 107, 0) 70%); }
+.cb-3 { width: 14vmax; height: 14vmax; left: 22vw; top: 54vh; opacity: .24; animation-duration: 18s;
+  background: radial-gradient(circle, var(--c-yellow) 0%, rgba(255, 180, 60, 0) 68%); }
+.cb-4 { width: 9vmax; height: 9vmax; right: 18vw; bottom: 10vh; opacity: .2; animation-duration: 24s;
+  background: radial-gradient(circle, var(--c-apricot) 0%, rgba(255, 158, 107, 0) 70%); }
+.citrus-leaves { position: absolute; right: 1.5vmax; top: 4.5vmax; width: 13vmax; height: auto; opacity: .34; transform: rotate(-18deg); }
+.citrus-leaves .lf { fill: var(--c-leaf); }
+.citrus-leaves .lf2 { fill: var(--c-leaf-2); }
+.citrus-leaves .vein { fill: none; stroke: rgba(255, 251, 244, .5); stroke-width: 1.2; }
+@keyframes citrusDrift { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(-2vmax, 1.6vmax) scale(1.05); } }
+
+/* ---------- 껍질 선 (js/citrus3.js 가 그림): 사건마다 한 색, 미세한 가장자리 ---------- */
+.peel-a { fill: var(--peel-a); stroke: var(--peel-edge-a); stroke-width: .6; stroke-linejoin: round; }
+.peel-b { fill: var(--peel-b); stroke: var(--peel-edge-b); stroke-width: .6; stroke-linejoin: round; }
+.peel-shadow { fill: rgba(120, 60, 0, .07); }
+.peel-gap { fill: var(--ground); stroke: var(--ground); stroke-linejoin: round; }
+.citrus-seam { stroke-width: .8 !important; opacity: .35; }
+
+/* ---------- 홈 ---------- */
+.hv-stage { background: transparent; }
+.hv-road, .hv-slab, .hv-ahead { display: none; }
+.hv-lane { opacity: 0; }
+.hv-ahead-line { stroke: var(--c-apricot); stroke-width: 2; stroke-dasharray: 1 9; opacity: .9; }
+.hv-post { stroke: rgba(23, 22, 26, .22); }
+.hv-foot { fill: var(--ink); }
+.d-grass { stroke: var(--c-leaf-2); }
+.d-shrub { fill: var(--c-apricot); opacity: .45; }   /* v3: blur 필터 제거 (확대 전환 때 다시 그리는 부담 ↓) */
+.d-leaf { fill: var(--c-leaf); }
+.d-leaf-hi { fill: var(--c-leaf-2); }
+.d-trunk { stroke: var(--c-leaf); }
+.d-shadow { fill: rgba(120, 60, 0, .06); }
+.d-wall-l, .d-wall-r, .d-roof, .d-roof-edge { display: none; }
+.d-stone { fill: var(--c-yellow); opacity: .7; }
+.hv-ph { isolation: isolate; }
+.hv-ph::before {
+  content: ""; position: absolute; left: -18%; right: -18%; top: -14%; bottom: -14%; z-index: -1;
+  border-radius: 50%; background: radial-gradient(circle, rgba(255, 140, 40, .5), rgba(255, 180, 60, 0) 68%);
+  filter: blur(14px); opacity: 0; pointer-events: none;
+}
+.hv-ph.is-on::before { animation: citrusBloom 1.6s var(--ease) both; }
+@keyframes citrusBloom { 0% { opacity: 0; transform: scale(.7); } 35% { opacity: 1; } 100% { opacity: 0; transform: scale(1.15); } }
+/* 사진 (v3): 두꺼운 흰 프레임 없이 — 같은 크기·위치, 아주 얇은 선과 부드러운 그림자만 */
+.hv-ph-frame {
+  padding: 0; background: var(--surface-sunken); overflow: hidden;
+  border: 1px solid var(--ph-line); border-radius: 10px; box-shadow: var(--ph-shadow);
+}
+.hv-ph img { border-radius: 0; }
+.hv-mark { background: var(--ground); }
+/* Road Zoom 중에는 확대될수록 커지는 보조 그림자·번짐을 빼서 매 프레임 그리는 양을 줄임 */
+.is-leaving .peel-shadow, .is-leaving .hv-ph::before { display: none; }
+
+/* 세 사람 (v3): 직립한 픽토그램 — 머리·몸통은 면, 팔다리는 둥근 끝 선 */
+.walker-v3 .w-body { fill: var(--ink); stroke: none; }
+.walker-v3 .w-limb { stroke: var(--ink); stroke-width: 2.4; stroke-linecap: round; fill: none; }
+.walker-v3 .w-arm { stroke-width: 1.9; }
+.walker-v3 .walker-ground { fill: rgba(90, 45, 0, .12); stroke: none; }
+
+/* 홈 마지막 CTA (v3): 에디토리얼 링크 — 얇은 밑줄은 글자 아래에만, 화살표는 같은 높이의 원 안에 */
+.hv-cta {
+  gap: .55em; padding: 0 0 .3em; align-items: center;
+  font-size: clamp(21px, 2vw, 28px); font-weight: 500; letter-spacing: -.022em; line-height: 1.2;
+}
+.hv-cta::before, .hv-cta::after { right: auto; height: 1px; bottom: 0; }
+.hv-cta::before { width: calc(100% - 2.1em); background: rgba(23, 22, 26, .22); }
+.hv-cta::after { width: 1.6em; height: 1.5px; background: var(--ink); transition: width .8s var(--ease); }
+.hv-cta:hover::after, .hv-cta:focus-visible::after { width: calc(100% - 2.1em); }
+.hv-cta span {
+  display: inline-grid; place-items: center; box-sizing: border-box;
+  width: 2.1em; height: 2.1em; border-radius: 50%; border: 1px solid var(--ink);
+  font-size: .62em; line-height: 1; font-weight: 400;
+  transition: background-color .45s var(--ease), color .45s var(--ease), transform .7s var(--ease);
+}
+.hv-cta:hover span, .hv-cta:focus-visible span { background: var(--ink); color: var(--ground); transform: translateX(4px); }
+@media (max-width: 760px) {
+  /* 좁은 화면: 버튼 뒤 바탕을 딱딱한 상자 대신 위로 옅어지는 면으로 */
+  .hv-end { background: var(--ground); box-shadow: 0 0 22px 16px var(--ground); border-radius: 12px; }
+}
+
+/* ---------- 개요 ---------- */
+.ov-label { background: rgba(255, 251, 244, .9); }
+.ov-leader { stroke-dasharray: 1 4; }
+.ov-dot { box-shadow: 0 0 0 3px var(--ground); }
+/* 사진 (v3): 프레임 없이 얇은 선 + 그림자 */
+.ov-ph { padding: 0; background: var(--surface-sunken); border: 1px solid var(--ph-line); border-radius: 10px; box-shadow: var(--ph-shadow); overflow: hidden; }
+.ov-ph img { border-radius: 0; }
+.ov-ph.is-in.is-hover { border-color: rgba(23, 22, 26, .3); }
+.ov-ph.is-in.is-selected { border-color: var(--ink); }
+
+/* ---------- 장면 정보 팝업 (v3): 반투명 흰 바탕 + 검은 글자, A 는 은은한 오렌지 / B 는 은은한 녹색 ---------- */
+.ov-tip, .cp-tip {
+  color: var(--ink);
+  background: rgba(255, 255, 255, .8);
+  border: 1px solid rgba(255, 255, 255, .85);
+  box-shadow: 0 14px 34px -14px rgba(70, 35, 0, .3), 0 1px 3px rgba(23, 22, 26, .08);
+  -webkit-backdrop-filter: blur(10px) saturate(1.15); backdrop-filter: blur(10px) saturate(1.15);
+}
+.ov-tip[data-ev="a"], .cp-tip[data-ev="a"] { background-image: linear-gradient(140deg, rgba(255, 122, 26, .16), rgba(255, 180, 60, .06) 55%, rgba(255, 255, 255, 0)); }
+.ov-tip[data-ev="b"], .cp-tip[data-ev="b"] { background-image: linear-gradient(140deg, rgba(32, 194, 74, .15), rgba(32, 194, 74, .05) 55%, rgba(255, 255, 255, 0)); }
+.ov-tip { gap: 6px; padding: 13px 15px; }
+.ov-tip strong { color: var(--ink); }
+.ov-tip-id, .ov-tip-src { color: var(--mute); }
+.ov-tip-id { font-weight: 500; }
+.ov-tip[data-ev="a"] .ov-tip-id { color: var(--a-text); }
+.ov-tip[data-ev="b"] .ov-tip-id { color: var(--b-text); }
+.ov-tip-quote { color: var(--ink); }
+.ov-tip-src:last-child { margin-top: 2px; padding-top: 7px; border-top: 1px solid var(--rule); }
+.cp-tip b { color: var(--mute); }
+.cp-tip[data-ev="a"] b { color: var(--a-text); }
+.cp-tip[data-ev="b"] b { color: var(--b-text); }
+
+/* ---------- 비교 ---------- */
+.cp-stage { background: transparent; }
+.cp-bar-plan { stroke: var(--b); opacity: .35; }
+.cp-area-a { fill: var(--c-yellow); fill-opacity: .22; }
+.cp-band-shared { fill: rgba(32, 194, 74, .14); stroke: var(--b-text); }
+.cp-pill-b { stroke: var(--b-text); }
+
+/* ---------- 버튼 클릭: 버튼 둘레에서만 짧게 번지는 과즙 (js/citrus3.js) ---------- */
+.juice { position: fixed; z-index: 60; pointer-events: none; }
+.juice b { position: absolute; inset: 0; border-radius: inherit; }
+.juice i {
+  position: absolute; border-radius: 50%;
+  background: radial-gradient(circle at 38% 35%, rgba(255, 214, 140, .95), rgba(255, 122, 26, .8) 62%, rgba(255, 122, 26, .2) 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cb { animation: none; }
+  .hv-ph.is-on::before { animation: none; }
+  .hv-cta::after, .hv-cta span { transition: none; }
+}
